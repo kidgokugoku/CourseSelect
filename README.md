@@ -1,10 +1,12 @@
-# 选课工具
+# [选课工具](https://help-me-select-my-course.herokuapp.com/)
 
 现有功能：
 
 - 输入需要选的课，穷举所有不冲突的选课方案
 
 ## 使用
+
+左上角输入框输入想选的课: 马基,毛概 然后提交就好了
 
 ![image](https://user-images.githubusercontent.com/82298915/184543098-1df641a3-7026-4451-90bf-be4dfa24da21.png)
 ![image](https://user-images.githubusercontent.com/82298915/184543155-bb2f7c84-9fff-4810-b08c-0471118b8980.png)
@@ -18,3 +20,6 @@
 ## 注意事项
 
 最初只是用来自己选课的工具，所以没有写任何防呆，如果有bug可以提issue (应该可能会去修
+
+
+觉得好用的话可以点个 Star ...
