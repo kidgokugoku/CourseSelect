@@ -43,7 +43,7 @@ class CourseSelect {
     if (
       !(this.courselist.includes(node) || node === 'root' || tmp.includes(node))
     ) {
-      timelist = this.#parseTime(node)
+      timelist = this.data.get(node).time
       for (let time of timelist) {
         let x, y, z
         ;[x, y, z] = time
@@ -92,12 +92,12 @@ class CourseSelect {
   }
   #generateGraph() {
     this.dict_name_ID = new Map()
-    this.dict_ID_time = new Map()
     let cnt = 0
     this.data_courses.forEach((course) => {
       let items = course.replace('\r', '').split('","')
       items[0] = items[0].replace('"', '')
       items[items.length - 1] = items[items.length - 1].replace('",', '')
+      items[items.length - 1] = this.#parseTime(items[items.length - 1])
       this.data.set(items[0], new ObjCourse(items))
       let li = this.dict_name_ID.get(items[1])
       if (li === undefined) {
@@ -106,7 +106,6 @@ class CourseSelect {
         li.push(items[0])
         this.dict_name_ID.set(items[1], li)
       }
-      this.dict_ID_time.set(items[0], items[items.length - 1])
       cnt++
       if (cnt == this.data_courses.length) {
         let it = this.courselist[Symbol.iterator]()
@@ -125,15 +124,15 @@ class CourseSelect {
       }
     })
   }
-  #parseTime(node) {
+  #parseTime(time) {
     let li = []
-    let time = this.dict_ID_time.get(node)
     if (time.includes(';')) time = time.split(';')
     else time = [time]
     for (let t of time) {
+      if (t.replace(/\d+\-\d+周/i, '') === '') return []
       let timeFULL = t.replace(
-        /([0-9,\-]+)周 (.)\((\d+-\d+)节\).*/i,
-        '$1;$2;$3'
+        /([0-9,\-]+)周 (.)\((\d+(-\d+)?)节\)(.*)/i,
+        '$1;$2;$3;$4;$5'
       )
       let timeSep = timeFULL.split(';')
       let x = []
@@ -148,7 +147,19 @@ class CourseSelect {
           if (!wk.includes('-')) x.push(wk)
           else {
             ;[a, b] = wk.split('-')
-            for (let ix = Number(a); ix < Number(b) + 1; ix++) x.push(ix)
+            if (timeSep[4] === '单') {
+              for (let ix = Number(a); ix < Number(b) + 1; ix++)
+                if (ix % 2) {
+                  x.push(ix)
+                }
+            } else if (timeSep[4] === '双') {
+              for (let ix = Number(a); ix < Number(b) + 1; ix++)
+                if (!(ix % 2)) {
+                  x.push(ix)
+                }
+            } else {
+              for (let ix = Number(a); ix < Number(b) + 1; ix++) x.push(ix)
+            }
           }
         }
       }
@@ -161,10 +172,12 @@ class CourseSelect {
         key = it.next().value
       }
       //c
-      let cls = timeSep[2]
-      let c, d
-      ;[c, d] = cls.split('-')
-      for (let iz = Number(c); iz < Number(d) + 1; iz++) z.push(iz)
+      if (timeSep[3]) {
+        let cls = timeSep[2]
+        let c, d
+        ;[c, d] = cls.split('-')
+        for (let iz = Number(c); iz < Number(d) + 1; iz++) z.push(iz)
+      } else z.push(timeSep[2])
       for (let i of x)
         for (let j of y) for (let k of z) li.push([i, Number(j), k])
       return li
@@ -186,27 +199,62 @@ class CourseSelect {
 }
 
 function printSolutionsListView(solutions) {
+  $('#solution-list > li').remove()
   let cnt = 1
   for (let solution of solutions) {
     let li = `<li data=${solution.join(
       ';'
     )} selected="false" id="solution${cnt}"> 方案${cnt} </li>`
-    $('#solutions-list > ul').append(li)
+    $('#solutions-list').append(li)
     cnt++
   }
   $('#solution1').attr('selected', 'ture')
 }
 function printSolutionsTableView() {
-  let courses = $("li[selected='selected']").attr('data').split(';')
-  for (let c of courses) {
-    searchRes.data.get(c)
+  let cs = $("li[selected='selected']").attr('data').split(';')
+  for (let c of cs) {
+    timelist = searchRes.data.get(c).time
+    for (let t of timelist) {
+      let [x, y, z] = t
+      $(
+        `[week=${x}] > tbody > tr:nth-child(${z + 1}) > td:nth-child(${y + 1})`
+      ).text(searchRes.data.get(c).name)
+    }
   }
 }
+function submitSearch() {
+  searchRes = ''
+  let list = $('#input-text')[0].value.split(',')
+  searchRes = new CourseSelect(list, courses)
+  printSolutionsListView(searchRes.Select())
+  console.log(searchRes.Select())
+  printSolutionsTableView()
+  // $('#output').text(a.print())
+}
+function initTable() {
+  templete = document.querySelector('#solution-table > div > table')
+  $('[week]').remove()
+  for (let i = 0; i < 18; i++) {
+    tableWeek = templete.cloneNode(true)
+    tableWeek.setAttribute('week', `${i + 1}`)
+    templete.after(tableWeek)
+  }
+  templete.setAttribute('style', 'display:none')
+  $(`[week=1]`).css('display', 'table')
+  for (let i = 1; i < 19; i++) {
+    $(`[week=${i}] > tbody > tr:nth-child(1) > td:nth-child(1)`).text(
+      `第${i}周`
+    )
+  }
+}
+//script begin here
 const Http = new XMLHttpRequest()
 const url = './data.csv'
 Http.open('GET', url)
 Http.send()
 var courses
+var searchRes
+var tableWeek = []
 
 Http.onreadystatechange = (e) => {
   if (Http.readyState === Http.DONE) {
@@ -215,9 +263,20 @@ Http.onreadystatechange = (e) => {
     $('#input-submit').removeAttr('disabled')
   }
 }
-function submitSearch() {
-  list = $('#input-text')[0].value.split(',')
-  var searchRes = new CourseSelect(list, courses)
-  printSolutionsListView(searchRes.Select())
-  // $('#output').text(a.print())
-}
+setTimeout(() => {
+  initTable()
+  document.getElementById('page-previous').onclick = () => {
+    let currWeek = Number($('[week][style]').attr('week'))
+    if (currWeek - 1 > 0) {
+      $('[week][style]').removeAttr('style')
+      $(`[week=${currWeek - 1}]`).css('display', 'table')
+    }
+  }
+  document.getElementById('page-after').onclick = () => {
+    let currWeek = Number($('[week][style]').attr('week'))
+    if (currWeek + 1 < 19) {
+      $('[week][style]').removeAttr('style')
+      $(`[week=${currWeek + 1}]`).css('display', 'table')
+    }
+  }
+})
