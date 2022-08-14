@@ -340,7 +340,7 @@ setTimeout(() => {
       $('[selected=selected]').attr('id').replace('solution', '')
     )
     if (currWeek - 1 > 0) {
-      $(`#solution${currWeek}`).removeAttr('selected')
+      $(`#solution${currWeek}`).attr('selected', false)
       $(`#solution${currWeek - 1}`).attr('selected', 'selected')
       if (!$('[week][style]').length) printSolutionsTableView2()
       else printSolutionsTableView()
@@ -349,7 +349,7 @@ setTimeout(() => {
   document.getElementById('solution-next').onclick = () => {
     let currWeek = Number($('[selected]').attr('id').replace('solution', ''))
     if (currWeek + 1 < $('[selected]').length + 1) {
-      $(`#solution${currWeek}`).removeAttr('selected')
+      $(`#solution${currWeek}`).attr('selected', false)
       $(`#solution${currWeek + 1}`).attr('selected', 'selected')
       if (!$('[week][style]').length) printSolutionsTableView2()
       else printSolutionsTableView()
