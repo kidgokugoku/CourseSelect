@@ -22,17 +22,21 @@
         <a href="#">upgrade your browser</a> to improve your experience.
       </p>
     <![endif]-->
-    <div id="search-box">
-      <input type="text" name="input-text" id="input-text" />
-      <input
-        type="submit"
-        id="input-submit"
-        onclick="submitSearch()"
-        disabled="disabled"
-      />
+    <div class="tool-bar">
+      <div id="search-box">
+        <input type="text" name="input-text" id="input-text" />
+        <input
+          type="submit"
+          id="input-submit"
+          onclick="submitSearch()"
+          disabled="disabled"
+        />
+      </div>
+      <div>
+        <button class="view" id="list-view">切换列表</button>
+        <button class="view" id="grid-view">切换表格</button>
+      </div>
     </div>
-    <hr />
-
     <div id="solution-display">
       <div>
         <ul id="solutions-list"></ul>
@@ -174,9 +178,6 @@
           </table>
         </div>
         <button class="page" id="page-after">></button>
-        <table class="pages">
-          <tr></tr>
-        </table>
       </div>
       <div id="avalible-opts">
         <ul></ul>

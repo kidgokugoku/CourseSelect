@@ -46,8 +46,11 @@ class CourseSelect {
   }
   #fixCourseName(e) {
     let name = null
-    let re = new RegExp(['', ...e, ''].join('.*'))
-    console.log(re)
+    let ee = e.replace('IV', 'Ⅳ')
+    ee = ee.replace('III', 'Ⅲ')
+    ee = ee.replace('II', 'Ⅱ')
+    ee = ee.replace('I', 'Ⅰ')
+    let re = new RegExp(['', ...ee, ''].join('.*'))
     this.data.forEach((value) => {
       let res = re.exec(value.name)
       if (res != null) name = res
@@ -63,9 +66,11 @@ class CourseSelect {
       })
       if (!ok) {
         let fixedname = this.#fixCourseName(arg)
-        console.log(fixedname[0])
         if (fixedname) res.push(fixedname[0])
-        else window.alert(`课程 ${arg} 不存在，请检查输入`)
+        else {
+          window.alert(`课程 ${arg} 不存在，请检查输入`)
+          throw new EXCEPTION('输入有问题', arg)
+        }
       } else res.push(arg)
     }
     console.log(res)
@@ -242,8 +247,11 @@ function printSolutionsListView(solutions) {
     $('#solutions-list').append(li)
     cnt++
   }
-  $('#solution1').attr('selected', 'ture')
+  $('#solution1').attr('selected', 'true')
 }
+// function updateSolutionsTableView() {
+//   printSolutionsTableView()
+// }
 function printSolutionsTableView() {
   initTable()
   let cs = $("li[selected='selected']").attr('data').split(';')
@@ -266,7 +274,7 @@ function submitSearch() {
     printSolutionsListView(searchRes.Select())
     printSolutionsTableView()
   } catch (e) {
-    window.alert(e)
+    console.error(e)
   }
   // $('#output').text(a.print())
 }
@@ -312,6 +320,8 @@ setTimeout(() => {
       $(`[week=${currWeek + 1}]`).css('display', 'table')
     }
   }
+  document.getElementById('list-view').onclick = () => {}
+  document.getElementById('grid-view').onclick = () => {}
 })
 
 Http.onreadystatechange = (e) => {
