@@ -6,6 +6,7 @@ var ObjCourse = function (items) {
   this.gp = items[5]
   this.slot = items[7]
   this.time = items[8]
+  this.timeraw = items[9]
 }
 ObjCourse.prototype.print = function () {
   return `课程 ${this.name} 开课校区 ${this.campus} 授课方式 ${this.method} 授课老师 ${this.teacher} 学分 ${this.gp} 总学时 ${this.slot} 上课时间 ${this.time}`
@@ -73,7 +74,6 @@ class CourseSelect {
         }
       } else res.push(arg)
     }
-    console.log(res)
     return res
   }
   #s(node, tmp) {
@@ -152,7 +152,8 @@ class CourseSelect {
       let items = course.replace('\r', '').split('","')
       items[0] = items[0].replace('"', '')
       items[items.length - 1] = items[items.length - 1].replace('",', '')
-      items[items.length - 1] = this.#parseTime(items[items.length - 1])
+      items.push(items[items.length - 1])
+      items[items.length - 2] = this.#parseTime(items[items.length - 2])
       this.data.set(items[0], new ObjCourse(items))
       let li = this.map_name_ID.get(items[1])
       if (li === undefined) {
@@ -252,6 +253,17 @@ function printSolutionsListView(solutions) {
 // function updateSolutionsTableView() {
 //   printSolutionsTableView()
 // }
+function printSolutionsTableView2() {
+  $(`.course-list`).css('display', 'table')
+  $('[week][style]').removeAttr('style')
+  $('table.course-list > tbody >tr:gt(0)').remove()
+  cs = $("li[selected='selected']").attr('data').split(';')
+  for (let c of cs) {
+    let items = searchRes.data.get(c)
+    let tr = `<tr><td>${c}</td><td>${items.name}</td><td>${items.campus}</td><td>${items.method}</td><td>${items.teacher}</td><td>${items.gp}</td><td>${items.slot}</td><td class="last-column">${items.timeraw}</td></tr>`
+    $('table.course-list > tbody').append(tr)
+  }
+}
 function printSolutionsTableView() {
   initTable()
   let cs = $("li[selected='selected']").attr('data').split(';')
@@ -320,8 +332,8 @@ setTimeout(() => {
       $(`[week=${currWeek + 1}]`).css('display', 'table')
     }
   }
-  document.getElementById('list-view').onclick = () => {}
-  document.getElementById('grid-view').onclick = () => {}
+  // document.getElementById('list-view').onclick = printSolutionsListView()
+  // document.getElementById('grid-view').onclick = printSolutionsTableView()
 })
 
 Http.onreadystatechange = (e) => {

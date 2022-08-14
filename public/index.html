@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://cdn.jsdelivr.net/pyodide/v0.21.0/full/pyodide.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.7.1/jquery.min.js"></script>
     <script src="./scripts.js"></script>
   </head>
   <body>
@@ -33,8 +33,16 @@
         />
       </div>
       <div>
-        <button class="view" id="list-view">切换列表</button>
-        <button class="view" id="grid-view">切换表格</button>
+        <button
+          class="view"
+          id="list-view"
+          onclick="printSolutionsTableView2()"
+        >
+          切换列表
+        </button>
+        <button class="view" id="grid-view" onclick="printSolutionsTableView()">
+          切换表格
+        </button>
       </div>
     </div>
     <div id="solution-display">
@@ -174,6 +182,18 @@
               <td></td>
               <td></td>
               <td class="last-column"></td>
+            </tr>
+          </table>
+          <table class="course-list">
+            <tr class="first-row">
+              <td>选课号</td>
+              <td>上课校区</td>
+              <td>课程</td>
+              <td>授课方式</td>
+              <td>教师</td>
+              <td>学分</td>
+              <td>可选人数</td>
+              <td class="last-column">上课时间</td>
             </tr>
           </table>
         </div>

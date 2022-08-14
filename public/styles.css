@@ -107,8 +107,8 @@ td {
   padding: 1px 2px;
   margin: 1em 0 1em 0;
   height: 2em;
-  width: 10em;
+  width: 6em;
 }
-/* #grid-view {
-  
-} */
+.course-list {
+  display: none;
+}
