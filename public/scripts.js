@@ -11,8 +11,15 @@ ObjCourse.prototype.print = function () {
   return `课程 ${this.name} 开课校区 ${this.campus} 授课方式 ${this.method} 授课老师 ${this.teacher} 学分 ${this.gp} 总学时 ${this.slot} 上课时间 ${this.time}`
 }
 
+function EXCEPTION(exception, message) {
+  this.exception = exception
+  this.message = message
+  this.name = 'error'
+  return `${this.name}: ${this.message}`
+}
+
 class CourseSelect {
-  coursegraph = new Map()
+  courseGraph = new Map()
   visited = new Set()
   selections = []
   res = []
@@ -28,14 +35,42 @@ class CourseSelect {
   ])
 
   constructor(courselist, data_courses) {
-    //#validateCourselist()
-    this.courselist = courselist
-    this.data_courses = data_courses
+    this.dataCourses = data_courses
     this.tableTTL = this.#init_tableTTL()
+    this.#parseData()
+    try {
+      this.courselist = this.#validateCourselist(courselist)
+    } catch (e) {
+      throw e
+    }
   }
-  // #validateCourselist(courselist){
-  //   for(let arg of courselist)
-  // }
+  #fixCourseName(e) {
+    let name = null
+    let re = new RegExp(['', ...e, ''].join('.*'))
+    console.log(re)
+    this.data.forEach((value) => {
+      let res = re.exec(value.name)
+      if (res != null) name = res
+    })
+    return name
+  }
+  #validateCourselist(courselist) {
+    let res = []
+    for (let arg of courselist) {
+      let ok = false
+      this.data.forEach((value) => {
+        if (value.name === arg) ok = true
+      })
+      if (!ok) {
+        let fixedname = this.#fixCourseName(arg)
+        console.log(fixedname[0])
+        if (fixedname) res.push(fixedname[0])
+        else window.alert(`课程 ${arg} 不存在，请检查输入`)
+      } else res.push(arg)
+    }
+    console.log(res)
+    return res
+  }
   #s(node, tmp) {
     if (this.visited.has(node) != false) return
     this.visited.add(node)
@@ -56,12 +91,12 @@ class CourseSelect {
       }
       tmp.push(node)
     }
-    if (this.coursegraph.get(node) === undefined) {
+    if (this.courseGraph.get(node) === undefined) {
       let tmp2 = JSON.parse(JSON.stringify(tmp))
       this.res.push(tmp2)
       return
     }
-    for (let neighbour of this.coursegraph.get(node)) {
+    for (let neighbour of this.courseGraph.get(node)) {
       this.#s(neighbour, tmp)
       this.visited.delete(neighbour)
       if (timelist.length) {
@@ -74,6 +109,7 @@ class CourseSelect {
       continue
     }
   }
+
   Select() {
     this.#generateGraph()
     this.#s('root', [])
@@ -91,36 +127,34 @@ class CourseSelect {
     return arr
   }
   #generateGraph() {
-    this.dict_name_ID = new Map()
-    let cnt = 0
-    this.data_courses.forEach((course) => {
+    let it = this.courselist[Symbol.iterator]()
+    let thisCourse = 'root'
+    let nextCourse = it.next().value
+    let nextlist = new Array()
+    while (nextCourse != undefined) {
+      nextlist = this.map_name_ID.get(nextCourse)
+      this.courseGraph.set(thisCourse, nextlist)
+      for (let arg of nextlist) {
+        this.courseGraph.set(arg, [nextCourse])
+      }
+      thisCourse = nextCourse
+      nextCourse = it.next().value
+    }
+  }
+  #parseData() {
+    this.map_name_ID = new Map()
+    this.dataCourses.forEach((course) => {
       let items = course.replace('\r', '').split('","')
       items[0] = items[0].replace('"', '')
       items[items.length - 1] = items[items.length - 1].replace('",', '')
       items[items.length - 1] = this.#parseTime(items[items.length - 1])
       this.data.set(items[0], new ObjCourse(items))
-      let li = this.dict_name_ID.get(items[1])
+      let li = this.map_name_ID.get(items[1])
       if (li === undefined) {
-        this.dict_name_ID.set(items[1], [items[0]])
+        this.map_name_ID.set(items[1], [items[0]])
       } else {
         li.push(items[0])
-        this.dict_name_ID.set(items[1], li)
-      }
-      cnt++
-      if (cnt == this.data_courses.length) {
-        let it = this.courselist[Symbol.iterator]()
-        let thisCourse = 'root'
-        let nextCourse = it.next().value
-        let nextlist = new Array()
-        while (nextCourse != undefined) {
-          nextlist = this.dict_name_ID.get(nextCourse)
-          this.coursegraph.set(thisCourse, nextlist)
-          for (let arg of nextlist) {
-            this.coursegraph.set(arg, [nextCourse])
-          }
-          thisCourse = nextCourse
-          nextCourse = it.next().value
-        }
+        this.map_name_ID.set(items[1], li)
       }
     })
   }
@@ -225,10 +259,15 @@ function printSolutionsTableView() {
 }
 function submitSearch() {
   searchRes = ''
-  let list = $('#input-text')[0].value.split(',')
-  searchRes = new CourseSelect(list, courses)
-  printSolutionsListView(searchRes.Select())
-  printSolutionsTableView()
+  let list = $('#input-text')[0].value.trim().split(',')
+  list = list.map((e) => e.trim())
+  try {
+    searchRes = new CourseSelect(list, courses)
+    printSolutionsListView(searchRes.Select())
+    printSolutionsTableView()
+  } catch (e) {
+    window.alert(e)
+  }
   // $('#output').text(a.print())
 }
 function initTable() {
