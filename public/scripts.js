@@ -249,11 +249,13 @@ function printSolutionsListView(solutions) {
     cnt++
   }
   $('#solution1').attr('selected', 'true')
+  $('.solution').css('display', 'block')
 }
 // function updateSolutionsTableView() {
 //   printSolutionsTableView()
 // }
 function printSolutionsTableView2() {
+  console.log('called')
   $(`.course-list`).css('display', 'table')
   $('[week][style]').removeAttr('style')
   $('table.course-list > tbody >tr:gt(0)').remove()
@@ -331,6 +333,26 @@ setTimeout(() => {
     if (currWeek + 1 < 19) {
       $('[week][style]').removeAttr('style')
       $(`[week=${currWeek + 1}]`).css('display', 'table')
+    }
+  }
+  document.getElementById('solution-previous').onclick = () => {
+    let currWeek = Number(
+      $('[selected=selected]').attr('id').replace('solution', '')
+    )
+    if (currWeek - 1 > 0) {
+      $(`#solution${currWeek}`).removeAttr('selected')
+      $(`#solution${currWeek - 1}`).attr('selected', 'selected')
+      if (!$('[week][style]').length) printSolutionsTableView2()
+      else printSolutionsTableView()
+    }
+  }
+  document.getElementById('solution-next').onclick = () => {
+    let currWeek = Number($('[selected]').attr('id').replace('solution', ''))
+    if (currWeek + 1 < $('[selected]').length + 1) {
+      $(`#solution${currWeek}`).removeAttr('selected')
+      $(`#solution${currWeek + 1}`).attr('selected', 'selected')
+      if (!$('[week][style]').length) printSolutionsTableView2()
+      else printSolutionsTableView()
     }
   }
   // document.getElementById('list-view').onclick = printSolutionsListView()

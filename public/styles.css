@@ -40,7 +40,7 @@ ul {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
 }
-ul > li:hover {
+ul > li[selected='selected'] {
   background-color: #ccc;
   color: #1e1e1e;
 }
@@ -50,7 +50,6 @@ ul > li {
   height: 1.5em;
   border: 1px solid #ccc;
   margin: 1px;
-  cursor: pointer;
   justify-content: center;
   display: flex;
 }
@@ -117,4 +116,16 @@ a {
   white-space: nowrap;
   width: 4em;
   color: #8ab4f8;
+}
+#solution-previous {
+  margin: 0 0 0 7.5em;
+}
+.solution {
+  display: none;
+  background-color: #444;
+  border: 1px solid #555;
+  width: 5em;
+}
+.solution-div {
+  display: flex;
 }
