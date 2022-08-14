@@ -6,6 +6,8 @@
 
 ## 使用
 
+左上角输入框输入想选的课: 马基,毛概 然后提交就好了
+
 ![image](https://user-images.githubusercontent.com/82298915/184543098-1df641a3-7026-4451-90bf-be4dfa24da21.png)
 ![image](https://user-images.githubusercontent.com/82298915/184543155-bb2f7c84-9fff-4810-b08c-0471118b8980.png)
 
