@@ -28,10 +28,14 @@ class CourseSelect {
   ])
 
   constructor(courselist, data_courses) {
+    //#validateCourselist()
     this.courselist = courselist
     this.data_courses = data_courses
     this.tableTTL = this.#init_tableTTL()
   }
+  // #validateCourselist(courselist){
+  //   for(let arg of courselist)
+  // }
   #s(node, tmp) {
     if (this.visited.has(node) != false) return
     this.visited.add(node)
@@ -172,6 +176,7 @@ class CourseSelect {
     for (let r of this.res) {
       output += `方案${cnt} :\n`
       for (let c of r) {
+        output += `选课号： ${c} `
         output += this.data.get(c).print() + '\n'
       }
       cnt++
