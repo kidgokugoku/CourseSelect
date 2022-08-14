@@ -199,7 +199,7 @@ class CourseSelect {
 }
 
 function printSolutionsListView(solutions) {
-  $('#solution-list > li').remove()
+  $('#solutions-list > li').remove()
   let cnt = 1
   for (let solution of solutions) {
     let li = `<li data=${solution.join(
@@ -211,6 +211,7 @@ function printSolutionsListView(solutions) {
   $('#solution1').attr('selected', 'ture')
 }
 function printSolutionsTableView() {
+  initTable()
   let cs = $("li[selected='selected']").attr('data').split(';')
   for (let c of cs) {
     timelist = searchRes.data.get(c).time
@@ -227,7 +228,6 @@ function submitSearch() {
   let list = $('#input-text')[0].value.split(',')
   searchRes = new CourseSelect(list, courses)
   printSolutionsListView(searchRes.Select())
-  console.log(searchRes.Select())
   printSolutionsTableView()
   // $('#output').text(a.print())
 }
@@ -239,6 +239,7 @@ function initTable() {
     tableWeek.setAttribute('week', `${i + 1}`)
     templete.after(tableWeek)
   }
+  $('[week][style]').removeAttr('style')
   templete.setAttribute('style', 'display:none')
   $(`[week=1]`).css('display', 'table')
   for (let i = 1; i < 19; i++) {
@@ -256,13 +257,6 @@ var courses
 var searchRes
 var tableWeek = []
 
-Http.onreadystatechange = (e) => {
-  if (Http.readyState === Http.DONE) {
-    courses = Http.responseText.split('\n').slice(1)
-    courses.sort()
-    $('#input-submit').removeAttr('disabled')
-  }
-}
 setTimeout(() => {
   initTable()
   document.getElementById('page-previous').onclick = () => {
@@ -280,3 +274,11 @@ setTimeout(() => {
     }
   }
 })
+
+Http.onreadystatechange = (e) => {
+  if (Http.readyState === Http.DONE) {
+    courses = Http.responseText.split('\n').slice(1)
+    courses.sort()
+    $('#input-submit').removeAttr('disabled')
+  }
+}
