@@ -292,6 +292,7 @@ function submitSearch() {
 }
 function initTable() {
   templete = document.querySelector('#solution-table > div > table')
+  $('table.course-list').removeAttr('style')
   $('[week]').remove()
   for (let i = 0; i < 18; i++) {
     tableWeek = templete.cloneNode(true)

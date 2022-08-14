@@ -112,3 +112,9 @@ td {
 .course-list {
   display: none;
 }
+a {
+  margin: 1em 1em 1em 1em;
+  white-space: nowrap;
+  width: 4em;
+  color: #8ab4f8;
+}
