@@ -1,4 +1,83 @@
-#output {
-width: 90%;
-height: 20em;
+* {
+  color: #fff;
 }
+body {
+  background-color: #1e1e1e;
+}
+#search-box {
+  display: flex;
+}
+input {
+  background-color: #444;
+  border: 1px solid #555;
+}
+#input-text {
+  width: 20em;
+  margin: 0 0 0 5%;
+}
+#output {
+  margin: 0 5%;
+  width: 90%;
+  height: 20em;
+}
+ul {
+  width: 7.5em;
+  max-height: 36em;
+  overflow-y: scroll;
+  margin: auto;
+  list-style-type: none;
+}
+#solution-display {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+}
+ul > li {
+  color: #ccc;
+  width: 6em;
+  border: 1px solid;
+  margin: 1px;
+  cursor: pointer;
+  justify-content: center;
+  display: flex;
+}
+#solution-table {
+  display: grid;
+  grid-template-columns: 5% 90% 5%;
+}
+.page {
+  cursor: pointer;
+  background-color: #444;
+  height: 100%;
+}
+.pages {
+  grid-column-start: 1;
+  grid-column-end: 4;
+  height: 2em;
+  width: 100%;
+}
+table {
+  width: 100%;
+  height: 36em;
+}
+td {
+  border-left: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  text-align: center;
+  width: auto;
+}
+.last-column {
+  border-right: 1px solid #aaa;
+}
+.first-row > td {
+  border-top: 1px solid #aaa;
+}
+::-webkit-scrollbar{
+    background-color: #393a3d !important;
+}
+::-webkit-scrollbar-thumb:vertical{
+    background-color: #515255 !important;
+}
+::-webkit-scrollbar-thumb:vertical:active{
+    background-color: #595a5d !important;
+}
+inpu

@@ -184,6 +184,24 @@ class CourseSelect {
     return output
   }
 }
+
+function printSolutionsListView(solutions) {
+  let cnt = 1
+  for (let solution of solutions) {
+    let li = `<li data=${solution.join(
+      ';'
+    )} selected="false" id="solution${cnt}"> 方案${cnt} </li>`
+    $('#solutions-list > ul').append(li)
+    cnt++
+  }
+  $('#solution1').attr('selected', 'ture')
+}
+function printSolutionsTableView() {
+  let courses = $("li[selected='selected']").attr('data').split(';')
+  for (let c of courses) {
+    searchRes.data.get(c)
+  }
+}
 const Http = new XMLHttpRequest()
 const url = './data.csv'
 Http.open('GET', url)
@@ -194,12 +212,12 @@ Http.onreadystatechange = (e) => {
   if (Http.readyState === Http.DONE) {
     courses = Http.responseText.split('\n').slice(1)
     courses.sort()
-    $('#input_submit').removeAttr('disabled')
+    $('#input-submit').removeAttr('disabled')
   }
 }
 function submitSearch() {
-  list = $('#input_text')[0].value.split(',')
-  let a = new CourseSelect(list, courses)
-  a.Select()
-  $('#output').text(a.print())
+  list = $('#input-text')[0].value.split(',')
+  var searchRes = new CourseSelect(list, courses)
+  printSolutionsListView(searchRes.Select())
+  // $('#output').text(a.print())
 }
