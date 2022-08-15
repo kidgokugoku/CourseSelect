@@ -367,6 +367,7 @@ setTimeout(() => {
     } else $(`[week=${1}]`).css('display', 'table')
   }
   document.getElementById('solution-previous').onclick = () => {
+    $('#alt-solution-list > li').remove()
     let currSolution = Number(
       $('[selected=selected]').attr('id').replace('solution', '')
     )
@@ -379,6 +380,7 @@ setTimeout(() => {
     else printSolutionsTableView()
   }
   document.getElementById('solution-next').onclick = () => {
+    $('#alt-solution-list > li').remove()
     let currSolution = Number(
       $('[selected]').attr('id').replace('solution', '')
     )
