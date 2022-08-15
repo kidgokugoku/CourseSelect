@@ -223,19 +223,6 @@ class CourseSelect {
       return li
     }
   }
-  print() {
-    let output = ''
-    let cnt = 1
-    for (let r of this.res) {
-      output += `方案${cnt} :\n`
-      for (let c of r) {
-        output += `选课号： ${c} `
-        output += this.data.get(c).print() + '\n'
-      }
-      cnt++
-    }
-    return output
-  }
 }
 
 function printSolutionsListView(solutions) {
@@ -244,7 +231,7 @@ function printSolutionsListView(solutions) {
   for (let solution of solutions) {
     let li = `<li data=${solution.join(
       ';'
-    )} selected="false" id="solution${cnt}"> 方案${cnt} </li>`
+    )} selected="false" id="solution${cnt}"> #${cnt} </li>`
     $('#solutions-list').append(li)
     cnt++
   }
