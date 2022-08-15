@@ -47,7 +47,9 @@ ul {
 }
 ul > li[selected='selected'],
 .page:hover,
-.solution:hover {
+.solution:hover,
+.alt-solution:hover,
+.view:hover {
   background-color: #ccc;
   color: #1e1e1e;
 }
@@ -140,6 +142,7 @@ a {
 }
 .solution,
 .alt-solution {
+  cursor: pointer;
   height: 3em;
   display: none;
   background-color: #444;
