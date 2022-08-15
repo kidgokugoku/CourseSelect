@@ -45,11 +45,12 @@ ul {
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
 }
-ul > li[selected='selected'],
+#solutions-list > li[selected='selected'],
 .page:hover,
 .solution:hover,
 .alt-solution:hover,
-.view:hover {
+.view:hover,
+.btn:hover {
   background-color: #ccc;
   color: #1e1e1e;
 }
@@ -85,7 +86,6 @@ ul > li[selected='selected'],
   width: 2em;
 }
 table {
-  cursor: pointer;
   word-break: break-all;
   table-layout: fixed;
   width: 100%;
@@ -152,4 +152,9 @@ a {
 .solution-div,
 .alt-solution-div {
   display: flex;
+}
+.btn {
+  cursor: pointer;
+  background-color: #161b22;
+  border: 1px solid #555;
 }

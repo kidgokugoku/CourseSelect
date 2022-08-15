@@ -293,9 +293,20 @@ function printSolutionsTableView2() {
   cs = $("li[selected='selected']").attr('data').split(';')
   for (let c of cs) {
     let items = searchRes.data.get(c)
-    let tr = `<tr><td>${c}</td><td>${items.name}</td><td>${items.campus}</td><td>${items.method}</td><td>${items.teacher}</td><td>${items.gp}</td><td>${items.slot}</td><td class="last-column">${items.timeraw}</td></tr>`
+    let tr = `<tr><td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td><td>${items.name}</td><td>${items.campus}</td><td>${items.method}</td><td>${items.teacher}</td><td>${items.gp}</td><td>${items.slot}</td><td class="last-column">${items.timeraw}</td></tr>`
     $('table.course-list > tbody').append(tr)
   }
+  clipboard = new ClipboardJS('.btn')
+  clipboard.on('success', function (e) {
+    e.trigger.setAttribute('class', 'btn-copied')
+    e.trigger.setAttribute('title', 'copied')
+    console.info(e.trigger)
+    setTimeout(() => {
+      e.trigger.setAttribute('class', 'btn')
+      e.trigger.removeAttr('title')
+    }, 1000)
+    e.clearSelection()
+  })
 }
 function printSolutionsTableView() {
   initTable()
