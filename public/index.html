@@ -38,21 +38,27 @@
           class="view"
           id="list-view"
           onclick="printSolutionsTableView2()"
+          disabled="disabled"
         >
           切换列表
         </button>
-        <button class="view" id="grid-view" onclick="printSolutionsTableView()">
+        <button
+          class="view"
+          id="grid-view"
+          onclick="printSolutionsTableView()"
+          disabled="disabled"
+        >
           切换表格
         </button>
       </div>
     </div>
     <div id="solution-display">
       <div>
-        <ul id="solutions-list"></ul>
         <div class="solution-div">
           <button class="solution" id="solution-previous">↑</button>
           <button class="solution" id="solution-next">↓</button>
         </div>
+        <ul id="solutions-list"></ul>
       </div>
       <div id="solution-table">
         <button class="page" id="page-previous"><</button>
@@ -206,9 +212,10 @@
       </div>
       <div id="avalible-opts">
         <div class="alt-solution-div">
-          <button class="alt-solution" id="avalible-common">↑</button>
-          <button class="alt-solution" id="avalible-PE">↓</button>
+          <button class="alt-solution" id="avalible-common">查询通识</button>
+          <button class="alt-solution" id="avalible-PE">查询体育</button>
         </div>
+        <ul id="alt-solution-list"></ul>
         <ul></ul>
       </div>
     </div>

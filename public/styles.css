@@ -45,11 +45,13 @@ ul {
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
 }
-ul > li[selected='selected'] {
+ul > li[selected='selected'],
+.page:hover,
+.solution:hover {
   background-color: #ccc;
   color: #1e1e1e;
 }
-ul > li {
+#solutions-list > li {
   color: #ccc;
   width: 98%;
   height: 1.5em;
@@ -57,6 +59,18 @@ ul > li {
   margin: 1px;
   justify-content: center;
   display: flex;
+}
+#alt-solution-list > li {
+  color: #ccc;
+  width: 98%;
+  height: auto;
+  border: 1px solid #ccc;
+  margin: 1px;
+  padding: 0.2em;
+  justify-content: center;
+  display: flex;
+  word-break: break-all;
+  word-wrap: none;
 }
 #solution-table {
   display: grid;
@@ -69,6 +83,7 @@ ul > li {
   width: 2em;
 }
 table {
+  cursor: pointer;
   word-break: break-all;
   table-layout: fixed;
   width: 100%;
@@ -119,16 +134,19 @@ a {
   color: #8ab4f8;
   align-self: center;
 }
-#solution-previous {
+#solution-previous,
+#avalible-common {
   margin: 0 0 0 20%;
 }
 .solution,
 .alt-solution {
+  height: 3em;
   display: none;
   background-color: #444;
   border: 1px solid #555;
   width: 30%;
 }
-.solution-div {
+.solution-div,
+.alt-solution-div {
   display: flex;
 }

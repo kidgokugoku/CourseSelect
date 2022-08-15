@@ -5,8 +5,9 @@ var ObjCourse = function (items) {
   this.teacher = items[4]
   this.gp = items[5]
   this.slot = items[7]
-  this.time = items[8]
-  this.timeraw = items[9]
+  this.type = items[8]
+  this.time = items[9]
+  this.timeraw = items[10]
 }
 ObjCourse.prototype.print = function () {
   return `课程 ${this.name} 开课校区 ${this.campus} 授课方式 ${this.method} 授课老师 ${this.teacher} 学分 ${this.gp} 总学时 ${this.slot} 上课时间 ${this.time}`
@@ -24,6 +25,8 @@ class CourseSelect {
   visited = new Set()
   selections = []
   res = []
+  resCommon = []
+  resPE = []
   data = new Map()
   DICT_WEEKDAY = new Map([
     ['一', '1'],
@@ -99,6 +102,8 @@ class CourseSelect {
     if (this.courseGraph.get(node) === undefined) {
       let tmp2 = JSON.parse(JSON.stringify(tmp))
       this.res.push(tmp2)
+      this.#findAvalibleCommon()
+      this.#findAvaliblePE()
       return
     }
     for (let neighbour of this.courseGraph.get(node)) {
@@ -223,10 +228,48 @@ class CourseSelect {
       return li
     }
   }
+  #findAvalibleCommon() {
+    let li = []
+    this.data.forEach((value, key) => {
+      if (value.type != 'Common') return
+      let timelist = value.time
+      for (let time of timelist) {
+        let x, y, z
+        ;[x, y, z] = time
+        if (this.tableTTL[x][y][z] != 0) return
+      }
+      li.push(key)
+    })
+    this.resCommon.push(li)
+  }
+  #findAvaliblePE() {
+    let li = []
+    this.data.forEach((value, key) => {
+      if (!value.name.includes('体育')) return
+      let timelist = value.time
+      for (let time of timelist) {
+        let x, y, z
+        ;[x, y, z] = time
+        if (this.tableTTL[x][y][z] != 0) return
+      }
+      li.push(key)
+    })
+    this.resPE.push(li)
+  }
+  getAvilibleCommonList() {
+    return this.resCommon
+  }
+  getAviliblePEList() {
+    return this.resPE
+  }
+  getData() {
+    return this.data
+  }
 }
 
 function printSolutionsListView(solutions) {
   $('#solutions-list > li').remove()
+  $('#alt-solution-list > li').remove()
   let cnt = 1
   for (let solution of solutions) {
     let li = `<li data=${solution.join(
@@ -237,12 +280,13 @@ function printSolutionsListView(solutions) {
   }
   $('#solution1').attr('selected', 'true')
   $('.solution').css('display', 'block')
+  $('.alt-solution').css('display', 'block')
+  $('.view').removeAttr('disabled')
 }
 // function updateSolutionsTableView() {
 //   printSolutionsTableView()
 // }
 function printSolutionsTableView2() {
-  console.log('called')
   $(`.course-list`).css('display', 'table')
   $('[week][style]').removeAttr('style')
   $('table.course-list > tbody >tr:gt(0)').remove()
@@ -310,41 +354,72 @@ setTimeout(() => {
   initTable()
   document.getElementById('page-previous').onclick = () => {
     let currWeek = Number($('[week][style]').attr('week'))
+    $('[week][style]').removeAttr('style')
     if (currWeek - 1 > 0) {
-      $('[week][style]').removeAttr('style')
       $(`[week=${currWeek - 1}]`).css('display', 'table')
-    }
+    } else $(`[week=${18}]`).css('display', 'table')
   }
   document.getElementById('page-after').onclick = () => {
     let currWeek = Number($('[week][style]').attr('week'))
+    $('[week][style]').removeAttr('style')
     if (currWeek + 1 < 19) {
-      $('[week][style]').removeAttr('style')
       $(`[week=${currWeek + 1}]`).css('display', 'table')
-    }
+    } else $(`[week=${1}]`).css('display', 'table')
   }
   document.getElementById('solution-previous').onclick = () => {
-    let currWeek = Number(
+    let currSolution = Number(
       $('[selected=selected]').attr('id').replace('solution', '')
     )
-    if (currWeek - 1 > 0) {
-      $(`#solution${currWeek}`).attr('selected', false)
-      $(`#solution${currWeek - 1}`).attr('selected', 'selected')
-      if (!$('[week][style]').length) printSolutionsTableView2()
-      else printSolutionsTableView()
-    }
+    $(`#solution${currSolution}`).attr('selected', false)
+    if (currSolution - 1 > 0) {
+      $(`#solution${currSolution - 1}`).attr('selected', 'selected')
+    } else
+      $(`#solution${$('[selected]').length + 1}`).attr('selected', 'selected')
+    if (!$('[week][style]').length) printSolutionsTableView2()
+    else printSolutionsTableView()
   }
   document.getElementById('solution-next').onclick = () => {
-    let currWeek = Number($('[selected]').attr('id').replace('solution', ''))
-    if (currWeek + 1 < $('[selected]').length + 1) {
-      $(`#solution${currWeek}`).attr('selected', false)
-      $(`#solution${currWeek + 1}`).attr('selected', 'selected')
-      if (!$('[week][style]').length) printSolutionsTableView2()
-      else printSolutionsTableView()
+    let currSolution = Number(
+      $('[selected]').attr('id').replace('solution', '')
+    )
+    $(`#solution${currSolution}`).attr('selected', false)
+    if (currSolution + 1 < $('[selected]').length + 1) {
+      $(`#solution${currSolution + 1}`).attr('selected', 'selected')
+    } else $(`#solution${1}`).attr('selected', 'selected')
+    if (!$('[week][style]').length) printSolutionsTableView2()
+    else printSolutionsTableView()
+  }
+  document.getElementById('avalible-common').onclick = () => {
+    $('#alt-solution-list > li').remove()
+    let currSolution = Number(
+      $('[selected]').attr('id').replace('solution', '')
+    )
+    let cnt = 0
+    let list = searchRes.getAvilibleCommonList()[currSolution - 1]
+    for (let arg of list) {
+      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
+        searchRes.getData().get(arg).name
+      }</li>`
+      $('#alt-solution-list').append(li)
+      cnt++
     }
   }
-  // document.getElementById('list-view').onclick = printSolutionsListView()
-  // document.getElementById('grid-view').onclick = printSolutionsTableView()
-})
+  document.getElementById('avalible-PE').onclick = () => {
+    $('#alt-solution-list > li').remove()
+    let currSolution = Number(
+      $('[selected]').attr('id').replace('solution', '')
+    )
+    let cnt = 0
+    let list = searchRes.getAviliblePEList()[currSolution - 1]
+    for (let arg of list) {
+      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
+        searchRes.getData().get(arg).name
+      }</li>`
+      $('#alt-solution-list').append(li)
+      cnt++
+    }
+  }
+}, 100)
 
 Http.onreadystatechange = (e) => {
   if (Http.readyState === Http.DONE) {
