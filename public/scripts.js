@@ -361,15 +361,7 @@ function printSolutionsTableCheckable() {
   updateCheckBoxListFromSolution()
 
   clipboard = new ClipboardJS('.btn')
-  clipboard.on('success', function (e) {
-    e.trigger.setAttribute('class', 'btn-copied')
-    e.trigger.setAttribute('title', 'copied')
-    setTimeout(() => {
-      e.trigger.setAttribute('class', 'btn')
-      e.trigger.removeAttr('title')
-    }, 1000)
-    e.clearSelection()
-  })
+  clipboardAction(clipboard)
 }
 function printSolutionsTableView() {
   initTable()
@@ -431,6 +423,17 @@ function initTable() {
       `第${i}周`
     )
   }
+}
+function clipboardAction(clipboard) {
+  clipboard.on('success', function (e) {
+    e.trigger.setAttribute('class', 'tooltip')
+    $(e.trigger).append('<span class="tooltiptext">复制成功</span>')
+    setTimeout(() => {
+      e.trigger.setAttribute('class', 'btn')
+      $(e.trigger).find('span').remove()
+    }, 1000)
+    e.clearSelection()
+  })
 }
 //script begin here
 const Http = new XMLHttpRequest()
@@ -496,12 +499,13 @@ setTimeout(() => {
     let cnt = 0
     let list = searchRes.findAvalibleCommon(checkedList)
     for (let arg of list) {
-      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
-        searchRes.data.get(arg).name
-      }</li>`
+      let name = searchRes.data.get(arg).name
+      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"><button class="btn" data-title="copied" data-clipboard-text="${name}"> ${name}</button></li>`
       $('#alt-solution-list').append(li)
       cnt++
     }
+    clipboard = new ClipboardJS('.btn')
+    clipboardAction(clipboard)
   }
   document.getElementById('avalible-PE').onclick = () => {
     $('#alt-solution-list > li').remove()
@@ -512,12 +516,13 @@ setTimeout(() => {
     let cnt = 0
     let list = searchRes.findAvaliblePE(checkedList)
     for (let arg of list) {
-      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
-        searchRes.data.get(arg).name
-      }</li>`
+      let name = searchRes.data.get(arg).name
+      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"><button class="btn" data-title="copied" data-clipboard-text="${name}"> ${name}</button></li>`
       $('#alt-solution-list').append(li)
       cnt++
     }
+    clipboard = new ClipboardJS('.btn')
+    clipboardAction(clipboard)
   }
 }, 100)
 
