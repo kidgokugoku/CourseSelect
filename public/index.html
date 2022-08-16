@@ -26,33 +26,18 @@
     <div class="tool-bar">
       <div id="search-box">
         <input type="text" name="input-text" id="input-text" />
+        <span class="search"></span>
         <input
           type="submit"
           id="input-submit"
           onclick="submitSearch()"
           disabled="disabled"
         />
+        <span class="search"></span>
         <a href="https://github.com/kidgokugoku/course-select">使用帮助</a>
       </div>
-      <div>
-        <button
-          class="view"
-          id="list-view"
-          onclick="printSolutionsTableView2()"
-          disabled="disabled"
-        >
-          切换列表
-        </button>
-        <button
-          class="view"
-          id="grid-view"
-          onclick="printSolutionsTableView()"
-          disabled="disabled"
-        >
-          切换表格
-        </button>
-      </div>
     </div>
+    <hr id="hr1" />
     <div id="solution-display">
       <div>
         <div class="solution-div">
@@ -61,155 +46,20 @@
         </div>
         <ul id="solutions-list"></ul>
       </div>
-      <div id="solution-table">
-        <button class="page" id="page-previous"><</button>
-        <div class="table-container">
-          <table class="course-table">
-            <tr class="first-row">
-              <td></td>
-              <td>周一</td>
-              <td>周二</td>
-              <td>周三</td>
-              <td>周四</td>
-              <td>周五</td>
-              <td>周六</td>
-              <td class="last-column">周日</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>8</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>9</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>10</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>11</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-            <tr>
-              <td>12</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="last-column"></td>
-            </tr>
-          </table>
-          <table class="course-list">
-            <tr class="first-row">
-              <td>选课号</td>
-              <td>上课校区</td>
-              <td>课程</td>
-              <td>授课方式</td>
-              <td>教师</td>
-              <td>学分</td>
-              <td>可选人数</td>
-              <td class="last-column">上课时间</td>
-            </tr>
-          </table>
-        </div>
-        <button class="page" id="page-after">></button>
+      <div>
+        <table class="course-list" style="display: none">
+          <tr class="first-row">
+            <td></td>
+            <td>选课号</td>
+            <td>上课校区</td>
+            <td>课程</td>
+            <td>授课方式</td>
+            <td>教师</td>
+            <td>学分</td>
+            <td>可选人数</td>
+            <td class="last-column">上课时间</td>
+          </tr>
+        </table>
       </div>
       <div id="avalible-opts">
         <div class="alt-solution-div">
@@ -220,7 +70,145 @@
         <ul></ul>
       </div>
     </div>
-
+    <hr id="hr2" />
+    <div class="table-view">
+      <button class="page" id="page-previous"><</button>
+      <div class="table-container">
+        <table class="course-table">
+          <tr class="first-row">
+            <td></td>
+            <td>周一</td>
+            <td>周二</td>
+            <td>周三</td>
+            <td>周四</td>
+            <td>周五</td>
+            <td>周六</td>
+            <td class="last-column">周日</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="last-column"></td>
+          </tr>
+        </table>
+      </div>
+      <button class="page" id="page-after">></button>
+    </div>
     <!-- <textarea name="output" id="output"></textarea> -->
     <script src="" async defer></script>
   </body>

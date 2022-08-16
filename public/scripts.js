@@ -13,6 +13,12 @@ ObjCourse.prototype.print = function () {
   return `课程 ${this.name} 开课校区 ${this.campus} 授课方式 ${this.method} 授课老师 ${this.teacher} 学分 ${this.gp} 总学时 ${this.slot} 上课时间 ${this.time}`
 }
 
+if (!Array.prototype.subsetTo) {
+  Array.prototype.subsetTo = function (arr) {
+    return this.every((v) => arr.includes(v))
+  }
+}
+
 function EXCEPTION(exception, message) {
   this.exception = exception
   this.message = message
@@ -23,7 +29,7 @@ function EXCEPTION(exception, message) {
 class CourseSelect {
   courseGraph = new Map()
   visited = new Set()
-  selections = []
+  selectionItems = []
   res = []
   resCommon = []
   resPE = []
@@ -119,11 +125,11 @@ class CourseSelect {
       continue
     }
   }
-
   Select() {
     this.#generateGraph()
     this.#s('root', [])
-    return this.res
+    if (this.res.length > 0) return this.res
+    else return null
   }
   #init_tableTTL() {
     let arr = new Array(18)
@@ -145,6 +151,7 @@ class CourseSelect {
       nextlist = this.map_name_ID.get(nextCourse)
       this.courseGraph.set(thisCourse, nextlist)
       for (let arg of nextlist) {
+        this.selectionItems.push(arg)
         this.courseGraph.set(arg, [nextCourse])
       }
       thisCourse = nextCourse
@@ -262,12 +269,12 @@ class CourseSelect {
   getAviliblePEList() {
     return this.resPE
   }
-  getData() {
-    return this.data
+  getSelectionItems() {
+    return this.selectionItems
   }
 }
 
-function printSolutionsListView(solutions) {
+function generateSolutionsList(solutions) {
   $('#solutions-list > li').remove()
   $('#alt-solution-list > li').remove()
   let cnt = 1
@@ -283,24 +290,67 @@ function printSolutionsListView(solutions) {
   $('.alt-solution').css('display', 'block')
   $('.view').removeAttr('disabled')
 }
-// function updateSolutionsTableView() {
-//   printSolutionsTableView()
-// }
-function printSolutionsTableView2() {
-  $(`.course-list`).css('display', 'table')
-  $('[week][style]').removeAttr('style')
-  $('table.course-list > tbody >tr:gt(0)').remove()
+function updateCheckBoxListFromSolution() {
   cs = $("li[selected='selected']").attr('data').split(';')
+  $("tr>td>input[type='checkbox']").removeAttr('checked')
+  $("tr>td>input[type='checkbox']")
+    .parent()
+    .parent()
+    .attr('style', 'display:none')
   for (let c of cs) {
-    let items = searchRes.data.get(c)
-    let tr = `<tr><td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td><td>${items.name}</td><td>${items.campus}</td><td>${items.method}</td><td>${items.teacher}</td><td>${items.gp}</td><td>${items.slot}</td><td class="last-column">${items.timeraw}</td></tr>`
-    $('table.course-list > tbody').append(tr)
+    $(`tr>td>input[type='checkbox'][data-course-id='${c}']`).attr(
+      'checked',
+      'checked'
+    )
+    $(`tr>td>input[type='checkbox'][data-course-id='${c}']`)
+      .parent()
+      .parent()
+      .removeAttr('style')
   }
+  //$(`[data]>input`)
+}
+function updateCheckBoxListFromAction() {
+  $("tr>td>input[type='checkbox']")
+    .parent()
+    .parent()
+    .attr('style', 'display:none')
+  let resultList = new Set()
+  let checkedList = []
+  $(':checked').each(function () {
+    checkedList.push($(this).attr('data-course-id'))
+  })
+  searchRes.res.forEach((a) => {
+    if (checkedList.subsetTo(a)) {
+      a.forEach((b) => resultList.add(b))
+    }
+  })
+  for (let c of resultList) {
+    $(`tr>td>input[type='checkbox'][data-course-id='${c}']`)
+      .parent()
+      .parent()
+      .removeAttr('style')
+  }
+
+  printSolutionsTableView()
+}
+function printSolutionsTableCheckable() {
+  $('table.course-list > tbody >tr:gt(0)').remove()
+
+  let selectionItems = searchRes.getSelectionItems()
+  let cnt = 1
+  for (let c of selectionItems) {
+    let items = searchRes.data.get(c)
+    let tr = `<tr id="course${cnt}"><td><input data-course-id="${c}" type="checkbox" onchange="updateCheckBoxListFromAction()"></td><td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td><td>${items.name}</td><td>${items.campus}</td><td>${items.method}</td><td>${items.teacher}</td><td>${items.gp}</td><td>${items.slot}</td><td class="last-column">${items.timeraw}</td></tr>`
+    $('table.course-list > tbody').append(tr)
+    cnt++
+  }
+
+  updateCheckBoxListFromSolution()
+
   clipboard = new ClipboardJS('.btn')
   clipboard.on('success', function (e) {
     e.trigger.setAttribute('class', 'btn-copied')
     e.trigger.setAttribute('title', 'copied')
-    console.info(e.trigger)
     setTimeout(() => {
       e.trigger.setAttribute('class', 'btn')
       e.trigger.removeAttr('title')
@@ -310,8 +360,14 @@ function printSolutionsTableView2() {
 }
 function printSolutionsTableView() {
   initTable()
-  let cs = $("li[selected='selected']").attr('data').split(';')
-  for (let c of cs) {
+
+  $('.table-view').css('display', 'grid')
+
+  let checkedList = []
+  $(':checked').each(function () {
+    checkedList.push($(this).attr('data-course-id'))
+  })
+  for (let c of checkedList) {
     timelist = searchRes.data.get(c).time
     for (let t of timelist) {
       let [x, y, z] = t
@@ -327,7 +383,14 @@ function submitSearch() {
   list = list.map((e) => e.trim())
   try {
     searchRes = new CourseSelect(list, courses)
-    printSolutionsListView(searchRes.Select())
+    if (!searchRes) {
+      window.alert('当前选择的课程没有可行的全选方案。')
+      return
+    }
+    $('#search-box-full').attr('id', 'search-box')
+    generateSolutionsList(searchRes.Select())
+    $('.course-list').css('display', 'table')
+    printSolutionsTableCheckable()
     printSolutionsTableView()
   } catch (e) {
     console.error(e)
@@ -335,7 +398,7 @@ function submitSearch() {
   // $('#output').text(a.print())
 }
 function initTable() {
-  templete = document.querySelector('#solution-table > div > table')
+  templete = document.querySelector('.table-view > div > table')
   $('table.course-list').removeAttr('style')
   $('[week]').remove()
   for (let i = 0; i < 18; i++) {
@@ -378,6 +441,7 @@ setTimeout(() => {
     } else $(`[week=${1}]`).css('display', 'table')
   }
   document.getElementById('solution-previous').onclick = () => {
+    updateCheckBoxListFromSolution()
     $('#alt-solution-list > li').remove()
     let currSolution = Number(
       $('[selected=selected]').attr('id').replace('solution', '')
@@ -386,11 +450,15 @@ setTimeout(() => {
     if (currSolution - 1 > 0) {
       $(`#solution${currSolution - 1}`).attr('selected', 'selected')
     } else
-      $(`#solution${$('[selected]').length + 1}`).attr('selected', 'selected')
-    if (!$('[week][style]').length) printSolutionsTableView2()
+      $(`#solution${$('#solutions-list>li').length}`).attr(
+        'selected',
+        'selected'
+      )
+    if (!$('[week][style]').length) printSolutionsTableCheckable()
     else printSolutionsTableView()
   }
   document.getElementById('solution-next').onclick = () => {
+    updateCheckBoxListFromSolution()
     $('#alt-solution-list > li').remove()
     let currSolution = Number(
       $('[selected]').attr('id').replace('solution', '')
@@ -399,7 +467,7 @@ setTimeout(() => {
     if (currSolution + 1 < $('[selected]').length + 1) {
       $(`#solution${currSolution + 1}`).attr('selected', 'selected')
     } else $(`#solution${1}`).attr('selected', 'selected')
-    if (!$('[week][style]').length) printSolutionsTableView2()
+    if (!$('[week][style]').length) printSolutionsTableCheckable()
     else printSolutionsTableView()
   }
   document.getElementById('avalible-common').onclick = () => {
@@ -411,7 +479,7 @@ setTimeout(() => {
     let list = searchRes.getAvilibleCommonList()[currSolution - 1]
     for (let arg of list) {
       let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
-        searchRes.getData().get(arg).name
+        searchRes.data.get(arg).name
       }</li>`
       $('#alt-solution-list').append(li)
       cnt++
@@ -426,7 +494,7 @@ setTimeout(() => {
     let list = searchRes.getAviliblePEList()[currSolution - 1]
     for (let arg of list) {
       let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
-        searchRes.getData().get(arg).name
+        searchRes.data.get(arg).name
       }</li>`
       $('#alt-solution-list').append(li)
       cnt++

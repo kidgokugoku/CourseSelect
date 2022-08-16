@@ -6,31 +6,45 @@
 * {
   color: #fff;
 }
-.tool-bar,
-.tool-bar div {
+.tool-bar {
+  height: 4em;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 body {
   margin: 0;
   background-color: #1e1e1e;
 }
 #search-box {
   width: 30%;
+  border: 1px solid #555;
+  border-radius: 24px;
+  background-color: #444;
   display: flex;
-  margin: 0 0 0 0;
+  margin: 0 0 0 1em;
 }
 input {
-  height: 2em;
+  border: none;
   background-color: #444;
+  height: 2em;
   margin: 0.5em 0 0.5em 0;
-  border: 1px solid #555;
 }
 #input-text {
+  outline: none;
   width: 100%;
   height: 2em;
   margin: 0.5em 0 0.5em 0.5em;
+}
+span.search {
+  border-left: 1px solid #5f6368;
+  height: 2em;
+  align-self: center;
+}
+input[type='checkbox'] {
+  align-self: center;
+  margin: 0 0.5em 0 0;
 }
 ul {
   padding-left: 0;
@@ -55,13 +69,16 @@ ul {
   color: #1e1e1e;
 }
 #solutions-list > li {
+  display: flex;
   color: #ccc;
   width: 98%;
-  height: 1.5em;
-  border: 1px solid #ccc;
   margin: 1px;
   justify-content: center;
   display: flex;
+}
+#solutions-list > li {
+  border: 1px solid #ccc;
+  height: 1.5em;
 }
 #alt-solution-list > li {
   color: #ccc;
@@ -75,10 +92,6 @@ ul {
   word-break: break-all;
   word-wrap: none;
 }
-#solution-table {
-  display: grid;
-  grid-template-columns: 2em auto 2em;
-}
 .page {
   cursor: pointer;
   background-color: #444;
@@ -90,6 +103,9 @@ table {
   table-layout: fixed;
   width: 100%;
   height: 100%;
+}
+.course-table {
+  min-height: 39em;
 }
 td {
   border-left: 1px solid #aaa;
@@ -125,9 +141,6 @@ td {
   height: 2em;
   width: 100%;
 }
-.course-list {
-  display: none;
-}
 a {
   margin: 1em 1em 1em 1em;
   white-space: nowrap;
@@ -157,4 +170,14 @@ a {
   cursor: pointer;
   background-color: #161b22;
   border: 1px solid #555;
+}
+.table-view {
+  display: grid;
+  grid-template-columns: 2em auto 2em;
+}
+#hr1 {
+  margin: 0 0 1em 0;
+}
+#hr2 {
+  margin: 1em 0;
 }
