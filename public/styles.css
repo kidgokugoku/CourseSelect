@@ -31,6 +31,10 @@ input {
   height: 2em;
   margin: 0.5em 0 0.5em 0;
 }
+input[type='submit'] {
+  cursor: pointer;
+  color: #68cdfe;
+}
 #input-text {
   outline: none;
   width: 100%;
