@@ -25,7 +25,14 @@
     <![endif]-->
     <div class="tool-bar">
       <div id="search-box">
-        <input type="text" name="input-text" id="input-text" />
+        <input
+          type="text"
+          name="input-text"
+          id="input-text"
+          value="在此输入课程名,多个课程用逗号分割"
+          onfocus='if(this.value=="在此输入课程名,多个课程用逗号分割"){this.value="";}; '
+          onblur='if(this.value==""){this.value="在此输入课程名,多个课程用逗号分割";};'
+        />
         <span class="search"></span>
         <input
           type="submit"

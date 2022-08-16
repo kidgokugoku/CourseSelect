@@ -27,12 +27,11 @@ function EXCEPTION(exception, message) {
 }
 
 class CourseSelect {
+  esc = false
   courseGraph = new Map()
   visited = new Set()
   selectionItems = []
   res = []
-  resCommon = []
-  resPE = []
   data = new Map()
   DICT_WEEKDAY = new Map([
     ['一', '1'],
@@ -86,6 +85,7 @@ class CourseSelect {
     return res
   }
   #s(node, tmp) {
+    if (this.esc) return
     if (this.visited.has(node) != false) return
     this.visited.add(node)
     let timelist = []
@@ -108,8 +108,6 @@ class CourseSelect {
     if (this.courseGraph.get(node) === undefined) {
       let tmp2 = JSON.parse(JSON.stringify(tmp))
       this.res.push(tmp2)
-      this.#findAvalibleCommon()
-      this.#findAvaliblePE()
       return
     }
     for (let neighbour of this.courseGraph.get(node)) {
@@ -127,7 +125,10 @@ class CourseSelect {
   }
   Select() {
     this.#generateGraph()
+    let start = new Date().getTime()
     this.#s('root', [])
+    let end = new Date().getTime()
+    console.log(`搜索用时:${end - start}ms`)
     if (this.res.length > 0) return this.res
     else return null
   }
@@ -235,7 +236,16 @@ class CourseSelect {
       return li
     }
   }
-  #findAvalibleCommon() {
+  findAvalibleCommon(res) {
+    let tempTTL = this.#init_tableTTL()
+    for (let e of res) {
+      timelist = this.data.get(e).time
+      for (let time of timelist) {
+        let x, y, z
+        ;[x, y, z] = time
+        tempTTL[x][y][z] = 1
+      }
+    }
     let li = []
     this.data.forEach((value, key) => {
       if (value.type != 'Common') return
@@ -243,13 +253,22 @@ class CourseSelect {
       for (let time of timelist) {
         let x, y, z
         ;[x, y, z] = time
-        if (this.tableTTL[x][y][z] != 0) return
+        if (tempTTL[x][y][z] != 0) return
       }
       li.push(key)
     })
-    this.resCommon.push(li)
+    return li
   }
-  #findAvaliblePE() {
+  findAvaliblePE(res) {
+    let tempTTL = this.#init_tableTTL()
+    for (let e of res) {
+      timelist = this.data.get(e).time
+      for (let time of timelist) {
+        let x, y, z
+        ;[x, y, z] = time
+        tempTTL[x][y][z] = 1
+      }
+    }
     let li = []
     this.data.forEach((value, key) => {
       if (!value.name.includes('体育')) return
@@ -257,17 +276,11 @@ class CourseSelect {
       for (let time of timelist) {
         let x, y, z
         ;[x, y, z] = time
-        if (this.tableTTL[x][y][z] != 0) return
+        if (tempTTL[x][y][z] != 0) return
       }
       li.push(key)
     })
-    this.resPE.push(li)
-  }
-  getAvilibleCommonList() {
-    return this.resCommon
-  }
-  getAviliblePEList() {
-    return this.resPE
+    return li
   }
   getSelectionItems() {
     return this.selectionItems
@@ -378,6 +391,8 @@ function printSolutionsTableView() {
   }
 }
 function submitSearch() {
+  $('#input-submit').attr('disabled', 'disabled')
+
   searchRes = ''
   let list = $('#input-text')[0].value.trim().split(',')
   list = list.map((e) => e.trim())
@@ -395,6 +410,8 @@ function submitSearch() {
   } catch (e) {
     console.error(e)
   }
+  $('#input-submit').removeAttr('disabled')
+
   // $('#output').text(a.print())
 }
 function initTable() {
@@ -472,11 +489,12 @@ setTimeout(() => {
   }
   document.getElementById('avalible-common').onclick = () => {
     $('#alt-solution-list > li').remove()
-    let currSolution = Number(
-      $('[selected]').attr('id').replace('solution', '')
-    )
+    let checkedList = []
+    $(':checked').each(function () {
+      checkedList.push($(this).attr('data-course-id'))
+    })
     let cnt = 0
-    let list = searchRes.getAvilibleCommonList()[currSolution - 1]
+    let list = searchRes.findAvalibleCommon(checkedList)
     for (let arg of list) {
       let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
         searchRes.data.get(arg).name
@@ -487,11 +505,12 @@ setTimeout(() => {
   }
   document.getElementById('avalible-PE').onclick = () => {
     $('#alt-solution-list > li').remove()
-    let currSolution = Number(
-      $('[selected]').attr('id').replace('solution', '')
-    )
+    let checkedList = []
+    $(':checked').each(function () {
+      checkedList.push($(this).attr('data-course-id'))
+    })
     let cnt = 0
-    let list = searchRes.getAviliblePEList()[currSolution - 1]
+    let list = searchRes.findAvaliblePE(checkedList)
     for (let arg of list) {
       let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"> ${
         searchRes.data.get(arg).name
