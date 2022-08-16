@@ -8,14 +8,19 @@
 
 左上角输入框输入想选的课: 马基,毛概 然后提交就好了
 
-![image](https://user-images.githubusercontent.com/82298915/184543098-1df641a3-7026-4451-90bf-be4dfa24da21.png)
-![image](https://user-images.githubusercontent.com/82298915/184543155-bb2f7c84-9fff-4810-b08c-0471118b8980.png)
+![image](https://user-images.githubusercontent.com/82298915/184676134-af0106f1-5018-474d-872e-62f79619bb3a.png)
+![image](https://user-images.githubusercontent.com/82298915/184676181-af5628bf-a525-40fe-9220-a083c662a391.png)
+![image](https://user-images.githubusercontent.com/82298915/184676241-80867204-bcb7-4028-b118-ab76d654864a.png)
 
 输入课程务必用英文逗号间隔开，可以模糊匹配，但是建议输入精确的课程名 (可以直接去jwgl复制额
 
 左右箭头切换课表周数，右上角切换列表或课表视图
 
 左下角的上下箭头用于切换方案
+
+搜索后点击查询通识/查询体育可以查询当前方案能选的通识/体育课
+
+列表视图可以直接点击选课号复制
 
 ## 注意事项
 
