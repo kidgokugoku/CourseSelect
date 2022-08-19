@@ -79,11 +79,12 @@ ul {
   margin: 1px;
   justify-content: center;
   display: flex;
-}
-#solutions-list > li {
   border: 1px solid #ccc;
   height: 1.5em;
 }
+/* #solutions-list {
+  display: none;
+} */
 #alt-solution-list > li {
   color: #ccc;
   width: 98%;
@@ -170,7 +171,8 @@ a {
 .alt-solution-div {
   display: flex;
 }
-.btn {
+.btn,
+button {
   cursor: pointer;
   background-color: #161b22;
   border: 1px solid #555;

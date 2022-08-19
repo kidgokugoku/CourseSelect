@@ -303,48 +303,56 @@ function generateSolutionsList(solutions) {
   $('.alt-solution').css('display', 'block')
   $('.view').removeAttr('disabled')
 }
-function updateCheckBoxListFromSolution() {
-  cs = $("li[selected='selected']").attr('data').split(';')
-  $("tr>td>input[type='checkbox']").removeAttr('checked')
+function updateSolutionsList() {}
+function hideCheckboxItems() {
   $("tr>td>input[type='checkbox']")
     .parent()
     .parent()
     .attr('style', 'display:none')
+}
+function showCheckboxItems(itemID) {
+  $(`tr>td>input[type='checkbox'][data-course-id='${itemID}']`)
+    .parent()
+    .parent()
+    .removeAttr('style')
+}
+function updateCheckBoxListFromSolution() {
+  cs = $("li[selected='selected']").attr('data').split(';')
+  $("tr>td>input[type='checkbox']").removeAttr('checked')
+  hideCheckboxItems()
   for (let c of cs) {
     $(`tr>td>input[type='checkbox'][data-course-id='${c}']`).attr(
       'checked',
       'checked'
     )
-    $(`tr>td>input[type='checkbox'][data-course-id='${c}']`)
-      .parent()
-      .parent()
-      .removeAttr('style')
+    showCheckboxItems(c)
   }
+  printSolutionsTableView()
   //$(`[data]>input`)
 }
 function updateCheckBoxListFromAction() {
-  $("tr>td>input[type='checkbox']")
-    .parent()
-    .parent()
-    .attr('style', 'display:none')
+  hideCheckboxItems()
   let resultList = new Set()
   let checkedList = []
   $(':checked').each(function () {
     checkedList.push($(this).attr('data-course-id'))
   })
-  searchRes.res.forEach((a) => {
+  searchRes.res.forEach((a, index) => {
     if (checkedList.subsetTo(a)) {
       a.forEach((b) => resultList.add(b))
+      if (a.subsetTo(checkedList)) {
+        changeSolutionTo(index + 1)
+      }
     }
   })
   for (let c of resultList) {
-    $(`tr>td>input[type='checkbox'][data-course-id='${c}']`)
-      .parent()
-      .parent()
-      .removeAttr('style')
+    showCheckboxItems(c)
   }
-
   printSolutionsTableView()
+}
+function deSelect() {
+  $("tr>td>input[type='checkbox']").removeAttr('checked')
+  $(`tr>td>input[type='checkbox']`).parent().parent().removeAttr('style')
 }
 function printSolutionsTableCheckable() {
   $('table.course-list > tbody >tr:gt(0)').remove()
@@ -435,6 +443,15 @@ function clipboardAction(clipboard) {
     e.clearSelection()
   })
 }
+function changeSolutionTo(num) {
+  $('#alt-solution-list > li').remove()
+  let currSolution = Number(
+    $('[selected=selected]').attr('id').replace('solution', '')
+  )
+  $(`#solution${currSolution}`).attr('selected', false)
+  $(`#solution${num}`).attr('selected', 'selected')
+  updateCheckBoxListFromSolution()
+}
 //script begin here
 const Http = new XMLHttpRequest()
 const url = './data.csv'
@@ -461,7 +478,6 @@ setTimeout(() => {
     } else $(`[week=${1}]`).css('display', 'table')
   }
   document.getElementById('solution-previous').onclick = () => {
-    updateCheckBoxListFromSolution()
     $('#alt-solution-list > li').remove()
     let currSolution = Number(
       $('[selected=selected]').attr('id').replace('solution', '')
@@ -474,21 +490,18 @@ setTimeout(() => {
         'selected',
         'selected'
       )
-    if (!$('[week][style]').length) printSolutionsTableCheckable()
-    else printSolutionsTableView()
+    updateCheckBoxListFromSolution()
   }
   document.getElementById('solution-next').onclick = () => {
-    updateCheckBoxListFromSolution()
     $('#alt-solution-list > li').remove()
     let currSolution = Number(
-      $('[selected]').attr('id').replace('solution', '')
+      $('[selected=selected]').attr('id').replace('solution', '')
     )
     $(`#solution${currSolution}`).attr('selected', false)
     if (currSolution + 1 < $('[selected]').length + 1) {
       $(`#solution${currSolution + 1}`).attr('selected', 'selected')
     } else $(`#solution${1}`).attr('selected', 'selected')
-    if (!$('[week][style]').length) printSolutionsTableCheckable()
-    else printSolutionsTableView()
+    updateCheckBoxListFromSolution()
   }
   document.getElementById('avalible-common').onclick = () => {
     $('#alt-solution-list > li').remove()
