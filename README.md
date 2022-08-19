@@ -1,4 +1,4 @@
-# [选课工具](https://help-me-select-my-course.herokuapp.com/)
+# [排课工具](https://help-me-select-my-course.herokuapp.com/)
 
 现有功能：
 
@@ -10,6 +10,6 @@
 
 ## 注意事项
 
-最初只是用来自己选课的工具，如果有bug可以提issue (应该可能会去修
+最初只是用来自己排课的工具，如果有bug可以提issue (应该可能会去修
 
 觉得好用的话可以点个 Star ...
