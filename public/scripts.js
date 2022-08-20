@@ -396,7 +396,12 @@ function submitSearch() {
       return
     }
     $('#search-box-full').attr('id', 'search-box')
-    generateSolutionsList(searchRes.Select())
+    let res = searchRes.Select()
+    if (!res) {
+      window.alert('没有不冲突的选课方案..请尝试减少课程')
+      throw new EXCEPTION('缺少方案', '没有不冲突的选课方案')
+    }
+    generateSolutionsList(res)
     $('.course-list').css('display', 'table')
     printSolutionsTableCheckable()
     printSolutionsTableView()
