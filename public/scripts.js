@@ -387,7 +387,7 @@ function submitSearch() {
   $('#input-submit').attr('disabled', 'disabled')
 
   searchRes = ''
-  let list = $('#input-text')[0].value.trim().split(',')
+  let list = $('#input-text')[0].value.trim().replace('，', ',').split(',')
   list = list.map((e) => e.trim())
   try {
     searchRes = new CourseSelect(list, courses)
@@ -442,6 +442,10 @@ function changeSolutionTo(num) {
   )
   $(`#solution${currSolution}`).attr('selected', false)
   $(`#solution${num}`).attr('selected', 'selected')
+  $(`#solution${num}`)[0].scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  })
   updateCheckBoxListFromSolution()
 }
 function addCheckboxCourse(c, cnt) {

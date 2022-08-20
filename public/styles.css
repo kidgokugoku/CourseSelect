@@ -67,7 +67,7 @@ ul {
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
 }
-#solutions-list > li[selected='selected'],
+#solutions-list > li[selected='selected'] > .btn-solution,
 .page:hover,
 .btn-solution:hover,
 .btn-add-course:hover,
