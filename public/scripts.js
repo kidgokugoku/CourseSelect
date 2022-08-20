@@ -543,7 +543,9 @@ setTimeout(() => {
 })
 
 Http.onreadystatechange = (e) => {
+  if (Http.readyState === Http.LOADING) $('#loader').css('display', 'block')
   if (Http.readyState === Http.DONE) {
+    $('#loader').css('display', 'none')
     courses = Http.responseText.split('\n').slice(1)
     courses.sort()
     $('#input-submit').removeAttr('disabled')
