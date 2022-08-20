@@ -18,7 +18,8 @@ body {
   background-color: #1e1e1e;
 }
 #search-box {
-  width: 30%;
+  width: 60%;
+  max-width: 720px;
   border: 1px solid #555;
   border-radius: 24px;
   background-color: #444;
@@ -187,12 +188,17 @@ button {
 #hr2 {
   margin: 1em 0;
 }
+.course-td {
+  max-height: 4em;
+  overflow-x: hidden;
+  overflow-y: clip;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black; /* 悬停元素上显示点线 */
 }
-
 /* Tooltip 文本 */
 .tooltip .tooltiptext {
   visibility: hidden;

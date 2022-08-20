@@ -303,7 +303,6 @@ function generateSolutionsList(solutions) {
   $('.alt-solution').css('display', 'block')
   $('.view').removeAttr('disabled')
 }
-function updateSolutionsList() {}
 function hideCheckboxItems() {
   $("tr>td>input[type='checkbox']")
     .parent()
@@ -328,7 +327,6 @@ function updateCheckBoxListFromSolution() {
     showCheckboxItems(c)
   }
   printSolutionsTableView()
-  //$(`[data]>input`)
 }
 function updateCheckBoxListFromAction() {
   hideCheckboxItems()
@@ -361,7 +359,15 @@ function printSolutionsTableCheckable() {
   let cnt = 1
   for (let c of selectionItems) {
     let items = searchRes.data.get(c)
-    let tr = `<tr id="course${cnt}"><td><input data-course-id="${c}" type="checkbox" onchange="updateCheckBoxListFromAction()"></td><td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td><td>${items.name}</td><td>${items.campus}</td><td>${items.method}</td><td>${items.teacher}</td><td>${items.gp}</td><td>${items.slot}</td><td class="last-column">${items.timeraw}</td></tr>`
+    let tr = `<tr id="course${cnt}" >
+    <td><input data-course-id="${c}" type="checkbox" onchange="updateCheckBoxListFromAction()"></td>
+    <td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td>
+    <td><div class="course-td">${items.name}</div></td><td>${items.campus}</td>
+    <td>${items.method}</td><td>${items.teacher}</td>
+    <td>${items.gp}</td>
+    <td>${items.slot}</td>
+    <td class="last-column"><div class="course-td">${items.timeraw}</div></td><
+    /tr>`
     $('table.course-list > tbody').append(tr)
     cnt++
   }
