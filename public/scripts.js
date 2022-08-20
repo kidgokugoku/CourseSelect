@@ -91,6 +91,7 @@ class CourseSelect {
       !(this.courselist.includes(node) || node === 'root' || tmp.includes(node))
     ) {
       timelist = this.data.get(node).time
+      console.log(timelist)
       for (let time of timelist) {
         let x, y, z
         ;[x, y, z] = time
@@ -177,8 +178,10 @@ class CourseSelect {
   }
   #parseTime(time) {
     let li = []
+    console.log(time)
     if (time.includes(';')) time = time.split(';')
     else time = [time]
+    console.log(time)
     for (let t of time) {
       if (t.replace(/\d+\-\d+周/i, '') === '') return []
       let timeFULL = t.replace(
@@ -231,8 +234,8 @@ class CourseSelect {
       } else z.push(timeSep[2])
       for (let i of x)
         for (let j of y) for (let k of z) li.push([i, Number(j), k])
-      return li
     }
+    return li
   }
   findAvalibleCommon(res) {
     let tempTTL = this.#init_tableTTL()
