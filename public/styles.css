@@ -226,8 +226,7 @@ button {
   display: none;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
-  color: red;
+  font-size: 2em;
   position: absolute;
   justify-self: center;
   align-self: center;
