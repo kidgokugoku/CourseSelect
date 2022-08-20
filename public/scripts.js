@@ -84,6 +84,7 @@ class CourseSelect {
     return res
   }
   #s(node, tmp) {
+    console.log(node)
     if (this.visited.has(node) != false) return
     this.visited.add(node)
     let timelist = []
@@ -91,7 +92,6 @@ class CourseSelect {
       !(this.courselist.includes(node) || node === 'root' || tmp.includes(node))
     ) {
       timelist = this.data.get(node).time
-      console.log(timelist)
       for (let time of timelist) {
         let x, y, z
         ;[x, y, z] = time
@@ -132,11 +132,11 @@ class CourseSelect {
     else return null
   }
   #init_tableTTL() {
-    let arr = new Array(18)
+    let arr = new Array(19)
     for (let i = 0; i < arr.length; i++) {
-      let ar = new Array(7)
+      let ar = new Array(8)
       for (let j = 0; j < arr.length; j++) {
-        ar[j] = new Array(12).fill(0)
+        ar[j] = new Array(13).fill(0)
       }
       arr[i] = ar
     }
@@ -149,6 +149,7 @@ class CourseSelect {
     let nextlist = new Array()
     while (nextCourse != undefined) {
       nextlist = this.map_name_ID.get(nextCourse)
+      console.log(nextlist)
       this.courseGraph.set(thisCourse, nextlist)
       for (let arg of nextlist) {
         this.selectionItems.push(arg)
@@ -178,10 +179,8 @@ class CourseSelect {
   }
   #parseTime(time) {
     let li = []
-    console.log(time)
     if (time.includes(';')) time = time.split(';')
     else time = [time]
-    console.log(time)
     for (let t of time) {
       if (t.replace(/\d+\-\d+周/i, '') === '') return []
       let timeFULL = t.replace(
