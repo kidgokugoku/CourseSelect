@@ -27,7 +27,6 @@ function EXCEPTION(exception, message) {
 }
 
 class CourseSelect {
-  esc = false
   courseGraph = new Map()
   visited = new Set()
   selectionItems = []
@@ -85,7 +84,6 @@ class CourseSelect {
     return res
   }
   #s(node, tmp) {
-    if (this.esc) return
     if (this.visited.has(node) != false) return
     this.visited.add(node)
     let timelist = []
@@ -294,7 +292,7 @@ function generateSolutionsList(solutions) {
   for (let solution of solutions) {
     let li = `<li data=${solution.join(
       ';'
-    )} selected="false" id="solution${cnt}"> #${cnt} </li>`
+    )} selected="false" id="solution${cnt}"><button class="btn-solution" onclick="changeSolutionTo(${cnt})"> #${cnt} </button></li>`
     $('#solutions-list').append(li)
     cnt++
   }
@@ -330,6 +328,8 @@ function updateCheckBoxListFromSolution() {
 }
 function updateCheckBoxListFromAction() {
   hideCheckboxItems()
+  $('#alt-solution-list > li').remove()
+
   let resultList = new Set()
   let checkedList = []
   $(':checked').each(function () {
@@ -358,20 +358,9 @@ function printSolutionsTableCheckable() {
   let selectionItems = searchRes.getSelectionItems()
   let cnt = 1
   for (let c of selectionItems) {
-    let items = searchRes.data.get(c)
-    let tr = `<tr id="course${cnt}" >
-    <td><input data-course-id="${c}" type="checkbox" onchange="updateCheckBoxListFromAction()"></td>
-    <td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td>
-    <td><div class="course-td">${items.name}</div></td><td>${items.campus}</td>
-    <td>${items.method}</td><td>${items.teacher}</td>
-    <td>${items.gp}</td>
-    <td>${items.slot}</td>
-    <td class="last-column"><div class="course-td">${items.timeraw}</div></td><
-    /tr>`
-    $('table.course-list > tbody').append(tr)
+    addCheckboxCourse(c, cnt)
     cnt++
   }
-
   updateCheckBoxListFromSolution()
 
   clipboard = new ClipboardJS('.btn')
@@ -379,8 +368,6 @@ function printSolutionsTableCheckable() {
 }
 function printSolutionsTableView() {
   initTable()
-
-  $('.table-view').css('display', 'grid')
 
   let checkedList = []
   $(':checked').each(function () {
@@ -450,13 +437,40 @@ function clipboardAction(clipboard) {
   })
 }
 function changeSolutionTo(num) {
-  $('#alt-solution-list > li').remove()
   let currSolution = Number(
     $('[selected=selected]').attr('id').replace('solution', '')
   )
   $(`#solution${currSolution}`).attr('selected', false)
   $(`#solution${num}`).attr('selected', 'selected')
   updateCheckBoxListFromSolution()
+}
+function addCheckboxCourse(c, cnt) {
+  let items = searchRes.data.get(c)
+  let tr = `<tr id="course${cnt}" >
+    <td><input data-course-id="${c}" type="checkbox" onchange="updateCheckBoxListFromAction()"></td>
+    <td><button class="btn" data-title="copied" data-clipboard-text="${c}">${c}</button></td>
+    <td><div class="course-td">${items.name}</div></td><td>${items.campus}</td>
+    <td>${items.method}</td><td>${items.teacher}</td>
+    <td>${items.gp}</td>
+    <td>${items.slot}</td>
+    <td class="last-column"><div class="course-td">${items.timeraw}</div></td><
+    /tr>`
+  $('table.course-list > tbody').append(tr)
+}
+function addAdditionalCourse(course) {
+  let ttlCourse = searchRes.getSelectionItems().length + 1
+  $(`tr#course${ttlCourse}`).remove() //cleanup
+  printSolutionsTableView() //cleanup
+
+  addCheckboxCourse(course, ttlCourse)
+  $(`tr#course${ttlCourse} input`).attr('disabled', true)
+  timelist = searchRes.data.get(course).time
+  for (let t of timelist) {
+    let [x, y, z] = t
+    $(
+      `[week=${x}] > tbody > tr:nth-child(${z + 1}) > td:nth-child(${y + 1})`
+    ).text(searchRes.data.get(course).name)
+  }
 }
 //script begin here
 const Http = new XMLHttpRequest()
@@ -483,32 +497,6 @@ setTimeout(() => {
       $(`[week=${currWeek + 1}]`).css('display', 'table')
     } else $(`[week=${1}]`).css('display', 'table')
   }
-  document.getElementById('solution-previous').onclick = () => {
-    $('#alt-solution-list > li').remove()
-    let currSolution = Number(
-      $('[selected=selected]').attr('id').replace('solution', '')
-    )
-    $(`#solution${currSolution}`).attr('selected', false)
-    if (currSolution - 1 > 0) {
-      $(`#solution${currSolution - 1}`).attr('selected', 'selected')
-    } else
-      $(`#solution${$('#solutions-list>li').length}`).attr(
-        'selected',
-        'selected'
-      )
-    updateCheckBoxListFromSolution()
-  }
-  document.getElementById('solution-next').onclick = () => {
-    $('#alt-solution-list > li').remove()
-    let currSolution = Number(
-      $('[selected=selected]').attr('id').replace('solution', '')
-    )
-    $(`#solution${currSolution}`).attr('selected', false)
-    if (currSolution + 1 < $('[selected]').length + 1) {
-      $(`#solution${currSolution + 1}`).attr('selected', 'selected')
-    } else $(`#solution${1}`).attr('selected', 'selected')
-    updateCheckBoxListFromSolution()
-  }
   document.getElementById('avalible-common').onclick = () => {
     $('#alt-solution-list > li').remove()
     let checkedList = []
@@ -519,7 +507,7 @@ setTimeout(() => {
     let list = searchRes.findAvalibleCommon(checkedList)
     for (let arg of list) {
       let name = searchRes.data.get(arg).name
-      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"><button class="btn" data-title="copied" data-clipboard-text="${name}"> ${name}</button></li>`
+      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"><button class="btn-add-course" onclick="addAdditionalCourse('${arg}')"> ${name}</button></li>`
       $('#alt-solution-list').append(li)
       cnt++
     }
@@ -536,14 +524,14 @@ setTimeout(() => {
     let list = searchRes.findAvaliblePE(checkedList)
     for (let arg of list) {
       let name = searchRes.data.get(arg).name
-      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"><button class="btn" data-title="copied" data-clipboard-text="${name}"> ${name}</button></li>`
+      let li = `<li data=${arg} selected="false" id="alt-solution${cnt}"><button class="btn-add-course" onclick="addAdditionalCourse('${arg}')"> ${name}</button></li>`
       $('#alt-solution-list').append(li)
       cnt++
     }
     clipboard = new ClipboardJS('.btn')
     clipboardAction(clipboard)
   }
-}, 100)
+})
 
 Http.onreadystatechange = (e) => {
   if (Http.readyState === Http.DONE) {

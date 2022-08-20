@@ -60,14 +60,17 @@ ul {
   margin: auto;
   list-style-type: none;
 }
+#solutions-list {
+  max-height: 39em;
+}
 #solution-display {
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
 }
 #solutions-list > li[selected='selected'],
 .page:hover,
-.solution:hover,
-.alt-solution:hover,
+.btn-solution:hover,
+.btn-add-course:hover,
 .view:hover,
 .btn:hover {
   background-color: #ccc;
@@ -155,7 +158,6 @@ a {
   color: #8ab4f8;
   align-self: center;
 }
-#solution-previous,
 #avalible-common {
   margin: 0 0 0 20%;
 }
@@ -168,7 +170,6 @@ a {
   border: 1px solid #555;
   width: 30%;
 }
-.solution-div,
 .alt-solution-div {
   display: flex;
 }
@@ -193,7 +194,10 @@ button {
   overflow-x: hidden;
   overflow-y: clip;
 }
-
+.btn-solution,
+.btn-add-course {
+  width: 100%;
+}
 .tooltip {
   position: relative;
   display: inline-block;
