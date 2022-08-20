@@ -305,7 +305,7 @@ function hideCheckboxItems() {
   $("tr>td>input[type='checkbox']")
     .parent()
     .parent()
-    .attr('style', 'display:none')
+    .attr('style', 'display:none;')
 }
 function showCheckboxItems(itemID) {
   $(`tr>td>input[type='checkbox'][data-course-id='${itemID}']`)
