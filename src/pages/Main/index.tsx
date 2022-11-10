@@ -99,15 +99,15 @@ const Main: React.FC = () => {
     setFilteredInfo({ ...filteredInfo })
   }, [filterSelected])
   const colorArr = [
+    'lime',
     'magenta',
     'red',
-    'volcano',
-    'orange',
-    'gold',
-    'lime',
-    'cyan',
     'blue',
+    'volcano',
     'geekblue',
+    'gold',
+    'cyan',
+    'orange',
   ]
   const getColor = (str: string) =>
     str ? colorArr[str.length % colorArr.length] : 'orange'
@@ -128,7 +128,9 @@ const Main: React.FC = () => {
               type="text"
               onClick={() => onClickCopy(record.key)}
             >
-              [{record.key}]{' '}
+              <Tag color={getColor(record.key)} key={record.key}>
+                {record.key}
+              </Tag>
               <Tag color={getColor(record.name)} key={record.name}>
                 {record.name}
               </Tag>
@@ -149,19 +151,31 @@ const Main: React.FC = () => {
                 </Tag>
               )
             })}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              {record.courseTimes.map((courseTime: string) => {
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexFlow: 'row wrap',
+              }}
+            >
+              {record.courseTimes.map((courseTime: string, index: number) => {
                 return (
-                  <Tag color={getColor(courseTime)} key={courseTime}>
+                  <Tag color={colorArr[index]} key={courseTime}>
                     {courseTime}
                   </Tag>
                 )
               })}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexFlow: 'row wrap',
+              }}
+            >
               {record.classrooms.map((classroom: string, index: number) => {
                 return (
-                  <Tag color={getColor(classroom)} key={classroom + index}>
+                  <Tag color={colorArr[index]} key={classroom + index}>
                     {classroom}
                   </Tag>
                 )
@@ -172,8 +186,11 @@ const Main: React.FC = () => {
       },
       responsive: ['xs'],
       align: 'center',
-      filteredValue: filteredInfo.name || null,
-      onFilter: (value, record) => record.name === value,
+      filteredValue: filteredInfo.key?.length
+        ? filteredInfo.key
+        : filteredInfo.name || null,
+      onFilter: (value, record) =>
+        record.name === value || record.key === value,
     },
     {
       title: '选课号',
@@ -398,7 +415,6 @@ const Main: React.FC = () => {
         <Button
           onClick={() => {
             setFilterSelected(false)
-            setFilteredInfo({ ...filteredInfo })
           }}
         >
           未选
@@ -407,7 +423,6 @@ const Main: React.FC = () => {
         <Button
           onClick={() => {
             setFilterSelected(true)
-            setFilteredInfo({ ...filteredInfo })
           }}
         >
           已选

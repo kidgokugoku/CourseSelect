@@ -166,7 +166,7 @@ const Now: React.FC = () => {
     fontSize: '12px',
     lineHeight: '20px',
     margin: '2px 0 ',
-    padding: '0 5px',
+    padding: '0 2px',
     border: '1px solid #d9d9d9',
     borderRadius: '2px',
     transition: 'all 0.3s',
