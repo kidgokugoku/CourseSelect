@@ -1,7 +1,7 @@
 {
   "name": "courseselect",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/colors": "^6.0.0",
     "@ant-design/icons": "^4.7.0",
     "@types/node": "^18.11.9",
     "@types/papaparse": "^5.3.5",

@@ -22,6 +22,7 @@ interface DataType {
   hours: number
   slots: number
   courseType: string
+  classrooms: string[]
   teacherNames: string[]
   courseTimes: string[]
 }
@@ -108,6 +109,8 @@ const Main: React.FC = () => {
     'blue',
     'geekblue',
   ]
+  const getColor = (str: string) =>
+    str ? colorArr[str.length % colorArr.length] : 'orange'
   const columns: ColumnsType<DataType> = [
     {
       title: '课程',
@@ -126,50 +129,44 @@ const Main: React.FC = () => {
               onClick={() => onClickCopy(record.key)}
             >
               [{record.key}]{' '}
-              <Tag
-                color={colorArr[record.name.length % colorArr.length]}
-                key={record.name}
-              >
+              <Tag color={getColor(record.name)} key={record.name}>
                 {record.name}
               </Tag>
             </Button>
             <p>
               学分: {record.gradePoint} 可选: {record.slots}
             </p>
-            <Tag
-              color={colorArr[record.courseType.length % colorArr.length]}
-              key={record.courseType}
-            >
+            <Tag color={getColor(record.courseType)} key={record.courseType}>
               {courseType}
             </Tag>
-            <Tag
-              color={colorArr[record.campus.length % colorArr.length]}
-              key={record.campus}
-            >
+            <Tag color={getColor(record.campus)} key={record.campus}>
               {record.campus}
             </Tag>
             {record.teacherNames.map((teacherName: string) => {
-              const selecedColor = teacherName
-                ? colorArr[Math.floor(teacherName.length % colorArr.length)]
-                : 'orange'
-
               return (
-                <Tag color={selecedColor} key={teacherName}>
+                <Tag color={getColor(teacherName)} key={teacherName}>
                   {teacherName}
                 </Tag>
               )
             })}
-            {record.courseTimes.map((courseTime: string) => {
-              const selecedColor = courseTime
-                ? colorArr[Math.floor(courseTime.length % colorArr.length)]
-                : 'orange'
-
-              return (
-                <Tag color={selecedColor} key={courseTime}>
-                  {courseTime}
-                </Tag>
-              )
-            })}
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {record.courseTimes.map((courseTime: string) => {
+                return (
+                  <Tag color={getColor(courseTime)} key={courseTime}>
+                    {courseTime}
+                  </Tag>
+                )
+              })}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {record.classrooms.map((classroom: string, index: number) => {
+                return (
+                  <Tag color={getColor(classroom)} key={classroom + index}>
+                    {classroom}
+                  </Tag>
+                )
+              })}
+            </div>
           </>
         )
       },
@@ -215,11 +212,8 @@ const Main: React.FC = () => {
       filteredValue: filteredInfo.name || null,
       onFilter: (value, record) => record.name === value,
       render: (_, { name }) => {
-        const selecedColor = name
-          ? colorArr[Math.floor(name.length % colorArr.length)]
-          : 'orange'
         return (
-          <Tag color={selecedColor} key={name}>
+          <Tag color={getColor(name)} key={name}>
             {name}
           </Tag>
         )
@@ -351,13 +345,28 @@ const Main: React.FC = () => {
       render: (_, { teacherNames }) => (
         <span>
           {teacherNames.map((teacherName: string) => {
-            const selecedColor = teacherName
-              ? colorArr[Math.floor(teacherName.length % colorArr.length)]
-              : 'orange'
-
             return (
-              <Tag color={selecedColor} key={teacherName}>
+              <Tag color={getColor(teacherName)} key={teacherName}>
                 {teacherName}
+              </Tag>
+            )
+          })}
+        </span>
+      ),
+    },
+    {
+      title: '上课时间',
+      dataIndex: 'classrooms',
+      key: 'classrooms',
+      align: 'center',
+      responsive: ['sm'],
+      filteredValue: null,
+      render: (classrooms) => (
+        <span>
+          {classrooms.map((classroom: string, index: number) => {
+            return (
+              <Tag color={getColor(classroom)} key={classroom + index}>
+                {classroom}
               </Tag>
             )
           })}
@@ -374,12 +383,8 @@ const Main: React.FC = () => {
       render: (courseTimes) => (
         <span>
           {courseTimes.map((courseTime: string) => {
-            const selecedColor = courseTime
-              ? colorArr[Math.floor(courseTime.length % colorArr.length)]
-              : 'orange'
-
             return (
-              <Tag color={selecedColor} key={courseTime}>
+              <Tag color={getColor(courseTime)} key={courseTime}>
                 {courseTime}
               </Tag>
             )

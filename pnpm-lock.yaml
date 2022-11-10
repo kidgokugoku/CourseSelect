@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@ant-design/colors': ^6.0.0
   '@ant-design/icons': ^4.7.0
   '@types/node': ^18.11.9
   '@types/papaparse': ^5.3.5
@@ -23,6 +24,7 @@ specifiers:
   vite: ^3.2.0
 
 dependencies:
+  '@ant-design/colors': 6.0.0
   '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
   '@types/node': 18.11.9
   '@types/papaparse': 5.3.5

@@ -1,8 +1,8 @@
-import { Layout, Table } from 'antd'
+import { Table } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 import { useEffect, useState } from 'react'
 import { useUserData } from '../../component/UserDataContext'
-
+import './index.css'
 interface TimetableDataType {
   key: number
   monday: String[]
@@ -16,7 +16,6 @@ interface TimetableDataType {
 const parseTime = (times: string[]) => {
   let li: Array<number>[] = []
   for (const t of times) {
-    console.log(t)
     if (t.replace(/\d+\-\d+周/i, '') === '') return []
     let timeFULL = t.replace(
       /([0-9,\-]+)周 (.)\((\d+(-\d+)?)节\)(.*)/i,
@@ -28,29 +27,27 @@ const parseTime = (times: string[]) => {
     let z = []
     //week
     let week, a, b
-    if (timeSep[0].includes(',')) week = timeSep[0].split(',')
-    else {
-      week = [timeSep[0]]
-      for (let wk of week) {
-        if (!wk.includes('-')) x.push(wk)
-        else {
-          ;[a, b] = wk.split('-')
-          if (timeSep[4] === '单') {
-            for (let ix = Number(a); ix < Number(b) + 1; ix++)
-              if (ix % 2) {
-                x.push(ix)
-              }
-          } else if (timeSep[4] === '双') {
-            for (let ix = Number(a); ix < Number(b) + 1; ix++)
-              if (!(ix % 2)) {
-                x.push(ix)
-              }
-          } else {
-            for (let ix = Number(a); ix < Number(b) + 1; ix++) x.push(ix)
-          }
+    week = timeSep[0].includes(',') ? timeSep[0].split(',') : [timeSep[0]]
+    for (const wk of week) {
+      if (!wk.includes('-')) x.push(wk)
+      else {
+        ;[a, b] = wk.split('-')
+        if (timeSep[4] === '单') {
+          for (let ix = Number(a); ix < Number(b) + 1; ix++)
+            if (ix % 2) {
+              x.push(ix)
+            }
+        } else if (timeSep[4] === '双') {
+          for (let ix = Number(a); ix < Number(b) + 1; ix++)
+            if (!(ix % 2)) {
+              x.push(ix)
+            }
+        } else {
+          for (let ix = Number(a); ix < Number(b) + 1; ix++) x.push(ix)
         }
       }
     }
+
     //days
     y = [timeSep[1]]
     y = y.map((item) =>
@@ -70,14 +67,13 @@ const parseTime = (times: string[]) => {
     )
     //c
     if (timeSep[3]) {
-      let cls = timeSep[2]
-      let c, d
-      ;[c, d] = cls.split('-')
+      const cls = timeSep[2]
+      const [c, d] = cls.split('-')
       for (let iz = Number(c); iz < Number(d) + 1; iz++) z.push(iz)
     } else z.push(timeSep[2])
-    for (let i of x)
-      for (let j of y)
-        for (let k of z) li.push([Number(i), Number(j), Number(k)])
+    for (const i of x)
+      for (const j of y)
+        for (const k of z) li.push([Number(i), Number(j), Number(k)])
   }
   return li
 }
@@ -101,7 +97,7 @@ const Now: React.FC = () => {
         sunday: [],
       })
     }
-    let i = 0
+    let j = 0
     Coursedata.forEach((row) => {
       if (selection.includes(row.key)) {
         const li = parseTime(row.courseTimes)
@@ -141,7 +137,7 @@ const Now: React.FC = () => {
           }
         })
       }
-      if (++i === Coursedata.length) {
+      if (++j === Coursedata.length) {
         setLoading(false)
         setData([...data])
       }
@@ -158,13 +154,29 @@ const Now: React.FC = () => {
     'blue',
     'geekblue',
   ]
+
+  const getColor = (str: string) =>
+    str
+      ? colorArr[
+          (str.length + str.charCodeAt(str.charCodeAt(0) % str.length)) %
+            colorArr.length
+        ]
+      : 'orange'
+  const tagStyle = {
+    fontSize: '12px',
+    lineHeight: '20px',
+    margin: '2px 0 ',
+    padding: '0 5px',
+    border: '1px solid #d9d9d9',
+    borderRadius: '2px',
+    transition: 'all 0.3s',
+  }
   const columns: ColumnsType<TimetableDataType> = [
     {
       title: <></>,
       dataIndex: 'key',
       key: 'key',
       align: 'center',
-      width: '9%',
       render: (_, { key }) => <span>{(key % 12) + 1}</span>,
     },
     {
@@ -172,17 +184,14 @@ const Now: React.FC = () => {
       dataIndex: 'monday',
       key: 'monday',
       align: 'center',
-      width: '13%',
+      width: '19%',
       render: (_, { monday }) => (
         <span>
           {monday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -196,17 +205,14 @@ const Now: React.FC = () => {
       dataIndex: 'tuesday',
       key: 'tuesday',
       align: 'center',
-      width: '13%',
+      width: '19%',
       render: (_, { tuesday }) => (
         <span>
           {tuesday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -220,17 +226,14 @@ const Now: React.FC = () => {
       dataIndex: 'wednesday',
       key: 'wednesday',
       align: 'center',
-      width: '13%',
+      width: '19%',
       render: (_, { wednesday }) => (
         <span>
           {wednesday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -244,17 +247,14 @@ const Now: React.FC = () => {
       dataIndex: 'thursday',
       key: 'thursday',
       align: 'center',
-      width: '13%',
+      width: '19%',
       render: (_, { thursday }) => (
         <span>
           {thursday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -268,17 +268,14 @@ const Now: React.FC = () => {
       dataIndex: 'friday',
       key: 'friday',
       align: 'center',
-      width: '13%',
+      width: '19%',
       render: (_, { friday }) => (
         <span>
           {friday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -292,17 +289,13 @@ const Now: React.FC = () => {
       dataIndex: 'saturday',
       key: 'saturday',
       align: 'center',
-      width: '13%',
       render: (_, { saturday }) => (
         <span>
           {saturday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -316,17 +309,13 @@ const Now: React.FC = () => {
       dataIndex: 'sunday',
       key: 'sunday',
       align: 'center',
-      width: '13%',
       render: (_, { sunday }) => (
         <span>
           {sunday.map((a) => {
             return (
               <div
-                style={{
-                  border: '1px solid',
-                  margin: '1px',
-                  borderRadius: '5%',
-                }}
+                className={'ant-tag-' + getColor(a.toString())}
+                style={{ ...tagStyle }}
               >
                 {a}
               </div>
@@ -338,30 +327,27 @@ const Now: React.FC = () => {
   ]
 
   return !loading ? (
-    <Layout>
-      <Table
-        loading={loading}
-        columns={columns}
-        dataSource={data}
-        pagination={{
-          defaultPageSize: 12,
-          showSizeChanger: false,
-          position: ['topRight', 'bottomRight'],
-        }}
-      ></Table>
-    </Layout>
+    <Table
+      size="large"
+      loading={loading}
+      columns={columns}
+      dataSource={data}
+      pagination={{
+        defaultPageSize: 12,
+        showSizeChanger: false,
+        position: ['topRight', 'bottomRight'],
+      }}
+    ></Table>
   ) : (
-    <Layout>
-      <Table
-        loading={loading}
-        columns={columns}
-        pagination={{
-          defaultPageSize: 12,
-          showSizeChanger: false,
-          position: ['topRight', 'bottomRight'],
-        }}
-      ></Table>
-    </Layout>
+    <Table
+      loading={loading}
+      columns={columns}
+      pagination={{
+        defaultPageSize: 12,
+        showSizeChanger: false,
+        position: ['topRight', 'bottomRight'],
+      }}
+    ></Table>
   )
 }
 
