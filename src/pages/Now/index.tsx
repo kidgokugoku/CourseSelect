@@ -1,4 +1,4 @@
-import { Layout, Table, Tag } from 'antd'
+import { Layout, Table } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 import { useEffect, useState } from 'react'
 import { useUserData } from '../../component/UserDataContext'
@@ -147,13 +147,24 @@ const Now: React.FC = () => {
       }
     })
   }, [Coursedata])
-
+  const colorArr = [
+    'magenta',
+    'red',
+    'volcano',
+    'orange',
+    'gold',
+    'lime',
+    'cyan',
+    'blue',
+    'geekblue',
+  ]
   const columns: ColumnsType<TimetableDataType> = [
     {
       title: <></>,
       dataIndex: 'key',
       key: 'key',
       align: 'center',
+      width: '9%',
       render: (_, { key }) => <span>{(key % 12) + 1}</span>,
     },
     {
@@ -161,25 +172,21 @@ const Now: React.FC = () => {
       dataIndex: 'monday',
       key: 'monday',
       align: 'center',
+      width: '13%',
       render: (_, { monday }) => (
         <span>
           {monday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),
@@ -189,25 +196,21 @@ const Now: React.FC = () => {
       dataIndex: 'tuesday',
       key: 'tuesday',
       align: 'center',
+      width: '13%',
       render: (_, { tuesday }) => (
         <span>
           {tuesday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),
@@ -217,25 +220,21 @@ const Now: React.FC = () => {
       dataIndex: 'wednesday',
       key: 'wednesday',
       align: 'center',
+      width: '13%',
       render: (_, { wednesday }) => (
         <span>
           {wednesday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),
@@ -245,25 +244,21 @@ const Now: React.FC = () => {
       dataIndex: 'thursday',
       key: 'thursday',
       align: 'center',
+      width: '13%',
       render: (_, { thursday }) => (
         <span>
           {thursday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),
@@ -273,25 +268,21 @@ const Now: React.FC = () => {
       dataIndex: 'friday',
       key: 'friday',
       align: 'center',
+      width: '13%',
       render: (_, { friday }) => (
         <span>
           {friday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),
@@ -301,25 +292,21 @@ const Now: React.FC = () => {
       dataIndex: 'saturday',
       key: 'saturday',
       align: 'center',
+      width: '13%',
       render: (_, { saturday }) => (
         <span>
           {saturday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),
@@ -329,25 +316,21 @@ const Now: React.FC = () => {
       dataIndex: 'sunday',
       key: 'sunday',
       align: 'center',
+      width: '13%',
       render: (_, { sunday }) => (
         <span>
           {sunday.map((a) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
-            const selecedColor = a
-              ? colorArr[Math.floor(a.length % colorArr.length)]
-              : 'orange'
-
-            return <Tag color={selecedColor}>{a}</Tag>
+            return (
+              <div
+                style={{
+                  border: '1px solid',
+                  margin: '1px',
+                  borderRadius: '5%',
+                }}
+              >
+                {a}
+              </div>
+            )
           })}
         </span>
       ),

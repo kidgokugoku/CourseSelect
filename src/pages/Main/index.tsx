@@ -97,21 +97,21 @@ const Main: React.FC = () => {
     filteredInfo.key = filterSelected ? selection : []
     setFilteredInfo({ ...filteredInfo })
   }, [filterSelected])
+  const colorArr = [
+    'magenta',
+    'red',
+    'volcano',
+    'orange',
+    'gold',
+    'lime',
+    'cyan',
+    'blue',
+    'geekblue',
+  ]
   const columns: ColumnsType<DataType> = [
     {
       title: '课程',
       render: (record) => {
-        const colorArr = [
-          'magenta',
-          'red',
-          'volcano',
-          'orange',
-          'gold',
-          'lime',
-          'cyan',
-          'blue',
-          'geekblue',
-        ]
         const courseType =
           record.courseType === 'Specialty'
             ? '专业课'
@@ -175,6 +175,8 @@ const Main: React.FC = () => {
       },
       responsive: ['xs'],
       align: 'center',
+      filteredValue: filteredInfo.name || null,
+      onFilter: (value, record) => record.name === value,
     },
     {
       title: '选课号',
@@ -211,21 +213,8 @@ const Main: React.FC = () => {
       width: '14rem',
       responsive: ['sm'],
       filteredValue: filteredInfo.name || null,
-      onFilter: (value, record) => {
-        return record.name === value
-      },
+      onFilter: (value, record) => record.name === value,
       render: (_, { name }) => {
-        const colorArr = [
-          'magenta',
-          'red',
-          'volcano',
-          'orange',
-          'gold',
-          'lime',
-          'cyan',
-          'blue',
-          'geekblue',
-        ]
         const selecedColor = name
           ? colorArr[Math.floor(name.length % colorArr.length)]
           : 'orange'
@@ -362,17 +351,6 @@ const Main: React.FC = () => {
       render: (_, { teacherNames }) => (
         <span>
           {teacherNames.map((teacherName: string) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
             const selecedColor = teacherName
               ? colorArr[Math.floor(teacherName.length % colorArr.length)]
               : 'orange'
@@ -396,17 +374,6 @@ const Main: React.FC = () => {
       render: (courseTimes) => (
         <span>
           {courseTimes.map((courseTime: string) => {
-            const colorArr = [
-              'magenta',
-              'red',
-              'volcano',
-              'orange',
-              'gold',
-              'lime',
-              'cyan',
-              'blue',
-              'geekblue',
-            ]
             const selecedColor = courseTime
               ? colorArr[Math.floor(courseTime.length % colorArr.length)]
               : 'orange'
@@ -489,7 +456,7 @@ const Main: React.FC = () => {
         loading={loading}
         pagination={{
           showSizeChanger: true,
-          defaultPageSize: 100,
+          defaultPageSize: 20,
           pageSizeOptions: [10, 20, 50, 100],
           position: ['topRight', 'bottomRight'],
         }}
