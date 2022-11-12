@@ -2,6 +2,7 @@ import {
   Button,
   Input,
   Layout,
+  Radio,
   Select,
   SelectProps,
   Space,
@@ -113,7 +114,33 @@ const Main: React.FC = () => {
     str ? colorArr[str.length % colorArr.length] : 'orange'
   const columns: ColumnsType<DataType> = [
     {
-      title: '课程',
+      title: (
+        <>
+          <Radio.Group
+            onChange={(e) => {
+              filteredInfo.courseType = e.target.value ? [e.target.value] : []
+              setFilteredInfo({ ...filteredInfo })
+            }}
+          >
+            <Radio.Button>全部</Radio.Button>
+            <Radio.Button value="Specialty">专业课</Radio.Button>
+            <Radio.Button value="PublicBasic">公共基础课</Radio.Button>
+            <Radio.Button value="Common">通识课</Radio.Button>
+          </Radio.Group>
+          <Radio.Group
+            onChange={(e) => {
+              filteredInfo.campus = e.target.value ? [e.target.value] : []
+              setFilteredInfo({ ...filteredInfo })
+            }}
+          >
+            <Radio.Button>全部</Radio.Button>
+            <Radio.Button value="崂山校区">崂山校区</Radio.Button>
+            <Radio.Button value="鱼山校区">鱼山校区</Radio.Button>
+            <Radio.Button value="西海岸校区">西海岸校区</Radio.Button>
+          </Radio.Group>
+          <div>课程</div>
+        </>
+      ),
       render: (record) => {
         const courseType =
           record.courseType === 'Specialty'
@@ -188,9 +215,19 @@ const Main: React.FC = () => {
       align: 'center',
       filteredValue: filteredInfo.key?.length
         ? filteredInfo.key
-        : filteredInfo.name || null,
+        : filteredInfo.name?.length
+        ? filteredInfo.name
+        : filteredInfo.courseType?.length
+        ? filteredInfo.courseType
+        : filteredInfo.campus || null,
       onFilter: (value, record) =>
-        record.name === value || record.key === value,
+        (!filteredInfo.courseType?.length ||
+          filteredInfo.courseType?.includes(record.courseType)) &&
+        (!filteredInfo.campus?.length ||
+          filteredInfo.campus?.includes(record.campus)) &&
+        (record.name === value ||
+          record.key === value ||
+          record.courseType === value),
     },
     {
       title: '选课号',

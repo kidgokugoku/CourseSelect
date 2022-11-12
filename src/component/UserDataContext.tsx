@@ -116,11 +116,8 @@ export const UserDataProvider = (props: {
       //           thisRow.courseTimes = tmp.courseTimes
       //             ? [...thisRow.courseTimes, tmp.courseTimes[0]]
       //             : thisRow.courseTimes
-      //         } else if (
-      //           !a.includes(thisRow.name) &&
-      //           !data.find((element) => element.key === thisRow.key)
-      //         ) {
-      //           if (thisRow.key) data.push(thisRow)
+      //         } else if (!data.find((element) => element.key === thisRow.key)) {
+      //           if (thisRow.key && !a.includes(thisRow.name)) data.push(thisRow)
       //           thisRow = tmp
       //         }
       //       })

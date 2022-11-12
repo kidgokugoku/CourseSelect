@@ -9,8 +9,8 @@ const { Content, Sider } = Layout
 const items: MenuProps['items'] = [
   {
     icon: <EditFilled />,
-    label: <Link to="/main">选择课程</Link>,
-    key: '/main',
+    label: <Link to="/">选择课程</Link>,
+    key: '/',
   },
   {
     icon: <UnorderedListOutlined />,
