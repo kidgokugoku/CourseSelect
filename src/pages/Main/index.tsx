@@ -227,7 +227,8 @@ const Main: React.FC = () => {
           filteredInfo.campus?.includes(record.campus)) &&
         (record.name === value ||
           record.key === value ||
-          record.courseType === value),
+          record.courseType === value ||
+          record.campus === value),
     },
     {
       title: '选课号',
