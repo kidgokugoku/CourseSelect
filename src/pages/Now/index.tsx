@@ -31,7 +31,7 @@ const parseTime = (row: CourseType) => {
     let week, a, b
     week = timeSep[0].includes(',') ? timeSep[0].split(',') : [timeSep[0]]
     for (const wk of week) {
-      if (!wk.includes('-')) x.push(wk)
+      if (!wk.includes('-')) x.push(Number(wk))
       else {
         ;[a, b] = wk.split('-')
         if (timeSep[4] === '单') {
@@ -83,8 +83,9 @@ const parseTime = (row: CourseType) => {
 const Now: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<Array<TimetableDataType>>([])
-  const { data: Coursedata, selection, setSelection } = useUserData()
+  const { data: Coursedata, selection } = useUserData()
   const currentSelection: CourseType[] = []
+  const [disableSelection, setdisableSelection] = useState<Array<string>>([])
   useEffect(() => {
     if (!loading) return
     if (data.length !== 0) return
@@ -181,6 +182,12 @@ const Now: React.FC = () => {
     str
       ? colorArr[(str.length * str.charCodeAt(0)) % colorArr.length]
       : 'orange'
+  const courseOnClick = (id: string) => {
+    if (disableSelection.includes(id)) {
+      disableSelection.splice(disableSelection.indexOf(id), 1)
+    } else disableSelection.push(id)
+    setData([...data])
+  }
   const columns: ColumnsType<TimetableDataType> = [
     {
       title: <></>,
@@ -198,14 +205,14 @@ const Now: React.FC = () => {
       render: (_, { monday }) => (
         <span>
           {monday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(e)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
@@ -223,14 +230,14 @@ const Now: React.FC = () => {
       render: (_, { tuesday, key }) => (
         <span>
           {tuesday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(key)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
@@ -248,14 +255,14 @@ const Now: React.FC = () => {
       render: (_, { wednesday }) => (
         <span>
           {wednesday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(a.courseId)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
@@ -273,14 +280,14 @@ const Now: React.FC = () => {
       render: (_, { thursday }) => (
         <span>
           {thursday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(e)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
@@ -298,14 +305,14 @@ const Now: React.FC = () => {
       render: (_, { friday }) => (
         <span>
           {friday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(e)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
@@ -322,14 +329,14 @@ const Now: React.FC = () => {
       render: (_, { saturday }) => (
         <span>
           {saturday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(e)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
@@ -346,14 +353,14 @@ const Now: React.FC = () => {
       render: (_, { sunday }) => (
         <span>
           {sunday.map((a) => {
+            const cls = disableSelection.includes(a.courseId)
+              ? 'course-tag'
+              : 'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
             return (
               <button
-                className={
-                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
-                }
-                onClick={(e) => {
-                  console.log(e)
-                }}
+                style={{ cursor: 'pointer' }}
+                className={cls}
+                onClick={() => courseOnClick(a.courseId)}
               >
                 {a.text}
               </button>
