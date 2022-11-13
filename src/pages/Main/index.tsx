@@ -14,6 +14,7 @@ import { FilterValue, SorterResult } from 'antd/lib/table/interface'
 import copy from 'copy-to-clipboard'
 import { useEffect, useState } from 'react'
 import { useUserData } from '../../component/UserDataContext'
+import './index.scss'
 interface DataType {
   key: string
   name: string
@@ -80,10 +81,12 @@ const Main: React.FC = () => {
     sorter
   ) => {
     setFilteredInfo({
-      key: filters.key,
-      courseType: filters.courseType,
+      key: filters.key ? filters.key : filteredInfo.key,
+      courseType: filters.courseType
+        ? filters.courseType
+        : filteredInfo.courseType,
       name: filteredInfo.name,
-      campus: filters.campus,
+      campus: filters.campus ? filters.campus : filteredInfo.campus,
     })
     setSortedInfo(sorter as SorterResult<DataType>)
   }

@@ -2,7 +2,7 @@ import { Table } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 import { useEffect, useState } from 'react'
 import { useUserData } from '../../component/UserDataContext'
-import './index.css'
+import './index.scss'
 interface TimetableDataType {
   key: number
   monday: String[]
