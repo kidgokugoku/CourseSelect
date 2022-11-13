@@ -72,9 +72,11 @@ const Main: React.FC = () => {
       key: filters.key ? filters.key : filteredInfo.key,
       courseType: filters.courseType
         ? filters.courseType
-        : filteredInfo.courseType,
+        : ['Specialty', 'PublicBasic', 'Common'],
       name: filteredInfo.name,
-      campus: filters.campus ? filters.campus : filteredInfo.campus,
+      campus: filters.campus
+        ? filters.campus
+        : ['崂山校区', '鱼山校区', '西海岸校区'],
     })
     setSortedInfo(sorter as SorterResult<CourseType>)
   }

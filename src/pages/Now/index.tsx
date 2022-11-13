@@ -201,7 +201,7 @@ const Now: React.FC = () => {
       dataIndex: 'monday',
       key: 'monday',
       align: 'center',
-      width: '19%',
+
       render: (_, { monday }) => (
         <span>
           {monday.map((a) => {
@@ -226,7 +226,7 @@ const Now: React.FC = () => {
       dataIndex: 'tuesday',
       key: 'tuesday',
       align: 'center',
-      width: '19%',
+
       render: (_, { tuesday, key }) => (
         <span>
           {tuesday.map((a) => {
@@ -251,7 +251,7 @@ const Now: React.FC = () => {
       dataIndex: 'wednesday',
       key: 'wednesday',
       align: 'center',
-      width: '19%',
+
       render: (_, { wednesday }) => (
         <span>
           {wednesday.map((a) => {
@@ -276,7 +276,7 @@ const Now: React.FC = () => {
       dataIndex: 'thursday',
       key: 'thursday',
       align: 'center',
-      width: '19%',
+
       render: (_, { thursday }) => (
         <span>
           {thursday.map((a) => {
@@ -301,7 +301,7 @@ const Now: React.FC = () => {
       dataIndex: 'friday',
       key: 'friday',
       align: 'center',
-      width: '19%',
+
       render: (_, { friday }) => (
         <span>
           {friday.map((a) => {
