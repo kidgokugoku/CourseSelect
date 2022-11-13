@@ -6,6 +6,7 @@ import {
   Select,
   SelectProps,
   Space,
+  Switch,
   Table,
   Tag,
 } from 'antd'
@@ -15,19 +16,6 @@ import copy from 'copy-to-clipboard'
 import { useEffect, useState } from 'react'
 import { useUserData } from '../../component/UserDataContext'
 import './index.scss'
-interface DataType {
-  key: string
-  name: string
-  campus: string
-  method: string
-  gradePoint: number
-  hours: number
-  slots: number
-  courseType: string
-  classrooms: string[]
-  teacherNames: string[]
-  courseTimes: string[]
-}
 
 const onClickCopy = (value: string) => copy(value)
 
@@ -73,9 +61,9 @@ const Main: React.FC = () => {
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({ key: [], name: [], courseType: [], campus: [] })
-  const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({})
+  const [sortedInfo, setSortedInfo] = useState<SorterResult<CourseType>>({})
 
-  const handleChange: TableProps<DataType>['onChange'] = (
+  const handleChange: TableProps<CourseType>['onChange'] = (
     pagination,
     filters,
     sorter
@@ -88,7 +76,7 @@ const Main: React.FC = () => {
       name: filteredInfo.name,
       campus: filters.campus ? filters.campus : filteredInfo.campus,
     })
-    setSortedInfo(sorter as SorterResult<DataType>)
+    setSortedInfo(sorter as SorterResult<CourseType>)
   }
   const onSearch = (value: any) => {
     filteredInfo.name = value
@@ -115,7 +103,7 @@ const Main: React.FC = () => {
   ]
   const getColor = (str: string) =>
     str ? colorArr[str.length % colorArr.length] : 'orange'
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<CourseType> = [
     {
       title: (
         <>
@@ -452,22 +440,14 @@ const Main: React.FC = () => {
     },
 
     {
-      title: filterSelected ? (
-        <Button
+      title: (
+        <Switch
+          checkedChildren="已选"
+          unCheckedChildren="未选"
           onClick={() => {
-            setFilterSelected(false)
+            setFilterSelected(!filterSelected)
           }}
-        >
-          未选
-        </Button>
-      ) : (
-        <Button
-          onClick={() => {
-            setFilterSelected(true)
-          }}
-        >
-          已选
-        </Button>
+        />
       ),
       key: 'isSeleted',
       fixed: 'right',
@@ -476,19 +456,21 @@ const Main: React.FC = () => {
       render: (_, { key }) => {
         return selection.includes(key) ? (
           <Button
+            className="btn-select"
             onClick={() => {
               confirmDeselection(key)
             }}
           >
-            deselect
+            取消选择
           </Button>
         ) : (
           <Button
+            className="btn-select"
             onClick={() => {
               confirmSelection(key)
             }}
           >
-            select
+            选择课程
           </Button>
         )
       },

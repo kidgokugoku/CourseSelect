@@ -5,24 +5,26 @@ import { useUserData } from '../../component/UserDataContext'
 import './index.scss'
 interface TimetableDataType {
   key: number
-  monday: String[]
-  tuesday: String[]
-  wednesday: String[]
-  thursday: String[]
-  friday: String[]
-  saturday: String[]
-  sunday: String[]
+  monday: { text: string; courseId: string }[]
+  tuesday: { text: string; courseId: string }[]
+  wednesday: { text: string; courseId: string }[]
+  thursday: { text: string; courseId: string }[]
+  friday: { text: string; courseId: string }[]
+  saturday: { text: string; courseId: string }[]
+  sunday: { text: string; courseId: string }[]
 }
-const parseTime = (times: string[]) => {
-  let li: Array<number>[] = []
-  for (const t of times) {
+const parseTime = (row: CourseType) => {
+  let li: { week: number; weekday: number; course: number; room: string }[] = []
+  for (const i in row.courseTimes) {
+    const t = row.courseTimes[i]
+    const room = row.classrooms[i] ? row.classrooms[i] : ''
     if (t.replace(/\d+\-\d+周/i, '') === '') return []
     let timeFULL = t.replace(
       /([0-9,\-]+)周 (.)\((\d+(-\d+)?)节\)(.*)/i,
       '$1;$2;$3;$4;$5'
     )
     let timeSep = timeFULL.split(';')
-    let x = []
+    let x: number[] = []
     let y = []
     let z = []
     //week
@@ -70,10 +72,11 @@ const parseTime = (times: string[]) => {
       const cls = timeSep[2]
       const [c, d] = cls.split('-')
       for (let iz = Number(c); iz < Number(d) + 1; iz++) z.push(iz)
-    } else z.push(timeSep[2])
+    } else z.push(Number(timeSep[2]))
     for (const i of x)
       for (const j of y)
-        for (const k of z) li.push([Number(i), Number(j), Number(k)])
+        for (const k of z)
+          li.push({ week: i, weekday: j, course: k, room: room })
   }
   return li
 }
@@ -81,6 +84,7 @@ const Now: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<Array<TimetableDataType>>([])
   const { data: Coursedata, selection, setSelection } = useUserData()
+  const currentSelection: CourseType[] = []
   useEffect(() => {
     if (!loading) return
     if (data.length !== 0) return
@@ -97,51 +101,12 @@ const Now: React.FC = () => {
         sunday: [],
       })
     }
-    let j = 0
     Coursedata.forEach((row) => {
       if (selection.includes(row.key)) {
-        const li = parseTime(row.courseTimes)
-        li.forEach((element) => {
-          switch (element[1]) {
-            case 1:
-              data[(element[0] - 1) * 12 + element[2] - 1].monday.push(row.name)
-              break
-            case 2:
-              data[(element[0] - 1) * 12 + element[2] - 1].tuesday.push(
-                row.name
-              )
-              break
-            case 3:
-              data[(element[0] - 1) * 12 + element[2] - 1].wednesday.push(
-                row.name
-              )
-              break
-            case 4:
-              data[(element[0] - 1) * 12 + element[2] - 1].thursday.push(
-                row.name
-              )
-              break
-            case 5:
-              data[(element[0] - 1) * 12 + element[2] - 1].friday.push(row.name)
-              break
-            case 6:
-              data[(element[0] - 1) * 12 + element[2] - 1].saturday.push(
-                row.name
-              )
-              break
-            case 7:
-              data[(element[0] - 1) * 12 + element[2] - 1].sunday.push(row.name)
-              break
-            default:
-              break
-          }
-        })
-      }
-      if (++j === Coursedata.length) {
-        setLoading(false)
-        setData([...data])
+        currentSelection.push(row)
       }
     })
+    updateTableData()
   }, [Coursedata])
   const colorArr = [
     'magenta',
@@ -154,23 +119,68 @@ const Now: React.FC = () => {
     'blue',
     'geekblue',
   ]
-
+  const updateTableData = () => {
+    let j = 0
+    currentSelection.forEach((row) => {
+      const timeRes = parseTime(row)
+      timeRes.forEach((element) => {
+        switch (element.weekday) {
+          case 1:
+            data[(element.week - 1) * 12 + element.course - 1].monday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          case 2:
+            data[(element.week - 1) * 12 + element.course - 1].tuesday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          case 3:
+            data[(element.week - 1) * 12 + element.course - 1].wednesday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          case 4:
+            data[(element.week - 1) * 12 + element.course - 1].thursday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          case 5:
+            data[(element.week - 1) * 12 + element.course - 1].friday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          case 6:
+            data[(element.week - 1) * 12 + element.course - 1].saturday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          case 7:
+            data[(element.week - 1) * 12 + element.course - 1].sunday.push({
+              text: `${row.name}@${element.room}`,
+              courseId: row.key,
+            })
+            break
+          default:
+            break
+        }
+        if (++j === currentSelection.length) {
+          setLoading(false)
+          setData([...data])
+        }
+      })
+    })
+  }
   const getColor = (str: string) =>
     str
-      ? colorArr[
-          (str.length + str.charCodeAt(str.charCodeAt(0) % str.length)) %
-            colorArr.length
-        ]
+      ? colorArr[(str.length * str.charCodeAt(0)) % colorArr.length]
       : 'orange'
-  const tagStyle = {
-    fontSize: '12px',
-    lineHeight: '20px',
-    margin: '2px 0 ',
-    padding: '0 2px',
-    border: '1px solid #d9d9d9',
-    borderRadius: '2px',
-    transition: 'all 0.3s',
-  }
   const columns: ColumnsType<TimetableDataType> = [
     {
       title: <></>,
@@ -189,12 +199,16 @@ const Now: React.FC = () => {
         <span>
           {monday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(e)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
@@ -206,16 +220,20 @@ const Now: React.FC = () => {
       key: 'tuesday',
       align: 'center',
       width: '19%',
-      render: (_, { tuesday }) => (
+      render: (_, { tuesday, key }) => (
         <span>
           {tuesday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(key)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
@@ -231,12 +249,16 @@ const Now: React.FC = () => {
         <span>
           {wednesday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(a.courseId)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
@@ -252,12 +274,16 @@ const Now: React.FC = () => {
         <span>
           {thursday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(e)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
@@ -273,12 +299,16 @@ const Now: React.FC = () => {
         <span>
           {friday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(e)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
@@ -293,12 +323,16 @@ const Now: React.FC = () => {
         <span>
           {saturday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(e)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
@@ -313,12 +347,16 @@ const Now: React.FC = () => {
         <span>
           {sunday.map((a) => {
             return (
-              <div
-                className={'ant-tag-' + getColor(a.toString())}
-                style={{ ...tagStyle }}
+              <button
+                className={
+                  'ant-tag-' + getColor(a.text.toString()) + ' course-tag'
+                }
+                onClick={(e) => {
+                  console.log(e)
+                }}
               >
-                {a}
-              </div>
+                {a.text}
+              </button>
             )
           })}
         </span>
