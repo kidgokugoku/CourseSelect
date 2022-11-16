@@ -28,7 +28,7 @@ const Main: React.FC = () => {
     selection.splice(selection.indexOf(key), 1)
     setSelection([...selection])
   }
-
+  const { innerWidth } = window
   const { data, selection, setSelection } = useUserData()
 
   const confirmSelection: Function = (key: string) => {
@@ -68,16 +68,28 @@ const Main: React.FC = () => {
     filters,
     sorter
   ) => {
-    setFilteredInfo({
-      key: filters.key ? filters.key : filteredInfo.key,
-      courseType: filters.courseType
-        ? filters.courseType
-        : ['Specialty', 'PublicBasic', 'Common'],
-      name: filteredInfo.name,
-      campus: filters.campus
-        ? filters.campus
-        : ['崂山校区', '鱼山校区', '西海岸校区'],
-    })
+    console.log(filters, filteredInfo)
+    if (innerWidth <= 575)
+      setFilteredInfo({
+        key: filters.key ? filters.key : filteredInfo.key,
+        courseType: filters.courseType?.length
+          ? filters.courseType
+          : filteredInfo.courseType,
+        name: filteredInfo.name,
+        campus: filters.campus?.length ? filters.campus : filteredInfo.campus,
+      })
+    else
+      setFilteredInfo({
+        key: filters.key ? filters.key : filteredInfo.key,
+        courseType: filters.courseType?.length
+          ? filters.courseType
+          : ['Specialty', 'PublicBasic', 'Common'],
+        name: filteredInfo.name,
+        campus: filters.campus?.length
+          ? filters.campus
+          : ['崂山校区', '鱼山校区', '西海岸校区'],
+      })
+
     setSortedInfo(sorter as SorterResult<CourseType>)
   }
   const onSearch = (value: any) => {
