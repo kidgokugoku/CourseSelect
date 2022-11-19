@@ -1,18 +1,5 @@
 [
   {
-    "key": "",
-    "name": "",
-    "campus": "",
-    "method": "",
-    "gradePoint": 0,
-    "hours": 0,
-    "slots": 0,
-    "courseType": "",
-    "classrooms": [""],
-    "teacherNames": [""],
-    "courseTimes": [""]
-  },
-  {
     "key": "12001087",
     "name": "中国对外贸易理论与政策",
     "campus": "崂山校区",
