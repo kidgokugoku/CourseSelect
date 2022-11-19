@@ -68,7 +68,6 @@ const Main: React.FC = () => {
     filters,
     sorter
   ) => {
-    console.log(filters, filteredInfo)
     if (innerWidth <= 575)
       setFilteredInfo({
         key: filters.key ? filters.key : filteredInfo.key,

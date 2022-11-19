@@ -66,6 +66,7 @@ export const UserDataProvider = (props: {
   }
 
   useEffect(() => {
+    if (data.length) return
     axios
       .get('/db.json')
       // .get('/db.csv')
@@ -73,14 +74,6 @@ export const UserDataProvider = (props: {
       //   Papa.parse(res.data, {
       //     complete: function (results) {
       //       const res = results.data.slice(1)
-      //       const raw = res.map((row, index) => {
-      //         let cnt = 0
-      //         if (!row[0].length) {
-      //           while (!res[index - ++cnt][0].length) continue
-      //           row[0] = res[index - cnt][0]
-      //         }
-      //         return row
-      //       })
       //       let thisRow = {
       //         key: '',
       //         name: '',
@@ -94,7 +87,7 @@ export const UserDataProvider = (props: {
       //         teacherNames: [''],
       //         courseTimes: [''],
       //       }
-      //       res.forEach((row, index) => {
+      //       for (const row of res) {
       //         const tmp = {
       //           key: row[0],
       //           name: row[1],
@@ -116,11 +109,11 @@ export const UserDataProvider = (props: {
       //           thisRow.courseTimes = tmp.courseTimes
       //             ? [...thisRow.courseTimes, tmp.courseTimes[0]]
       //             : thisRow.courseTimes
-      //         } else if (!data.find((element) => element.key === thisRow.key)) {
-      //           if (thisRow.key && !a.includes(thisRow.name)) data.push(thisRow)
+      //         } else if (!data.find(({ key }) => key === thisRow.key)) {
+      //           if (!a.includes(thisRow.name)) data.push(thisRow)
       //           thisRow = tmp
       //         }
-      //       })
+      //       }
       //     },
       //   })
       //   data.forEach((row) => {
