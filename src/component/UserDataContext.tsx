@@ -46,17 +46,7 @@ const UserDataContext = createContext({
 
 export const useUserData = () => useContext(UserDataContext)
 
-export const UserDataProvider = (props: {
-  children:
-    | string
-    | number
-    | boolean
-    | ReactElement<any, string | JSXElementConstructor<any>>
-    | ReactFragment
-    | ReactPortal
-    | null
-    | undefined
-}) => {
+export const UserDataProvider = (props: { children: any }) => {
   const [data, setData] = useState<Array<DataType>>([])
   const [selection, setSelection] = useState<Array<string>>([])
   const userData = {
