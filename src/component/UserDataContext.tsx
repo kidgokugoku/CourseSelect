@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Papa from 'papaparse'
 import {
   createContext,
   JSXElementConstructor,
@@ -64,6 +65,7 @@ export const UserDataProvider = (props: { children: any }) => {
       //   Papa.parse(res.data, {
       //     complete: function (results) {
       //       const res = results.data.slice(1)
+      //       console.log(res.length)
       //       let thisRow = {
       //         key: '',
       //         name: '',
@@ -104,17 +106,10 @@ export const UserDataProvider = (props: { children: any }) => {
       //           thisRow = tmp
       //         }
       //       }
+      //       data.push(thisRow)
       //     },
       //   })
       //   data.forEach((row) => {
-      //     //   const name: string = row.name
-      //     //   if (!names.includes(name)) {
-      //     //     names.push(name)
-      //     //     options.push({
-      //     //       label: name,
-      //     //       value: name,
-      //     //     })
-      //     //   }
       //     row.courseTimes = row.courseTimes.map((x) =>
       //       x in row.courseTimes ? '' : x
       //     )
@@ -131,9 +126,9 @@ export const UserDataProvider = (props: { children: any }) => {
       //   })
       // })
       .then((res) => {
-        // console.log(data)
-        // setData(data)
-        // console.log(JSON.stringify(data))
+        //   console.log(data)
+        //   setData(data)
+        //   console.log(JSON.stringify(data))
         setData(res.data)
       })
 

@@ -52,7 +52,6 @@ const Main: React.FC = () => {
       }
       if (++i === data.length) {
         setLoading(false)
-        // console.log(JSON.stringify(data))
       }
     })
   }, [data])
@@ -114,8 +113,13 @@ const Main: React.FC = () => {
     'cyan',
     'orange',
   ]
-  const getColor = (str: string) =>
-    str ? colorArr[str.length % colorArr.length] : 'orange'
+  const getColor = (text: string) =>
+    text ? colorArr[text.length % colorArr.length] : 'orange'
+  const makeColoredTag = (text: string) => (
+    <Tag color={getColor(text)} key={text}>
+      {text}
+    </Tag>
+  )
   const columns: ColumnsType<CourseType> = [
     {
       title: (
@@ -159,12 +163,8 @@ const Main: React.FC = () => {
               type="text"
               onClick={() => onClickCopy(record.key)}
             >
-              <Tag color={getColor(record.key)} key={record.key}>
-                {record.key}
-              </Tag>
-              <Tag color={getColor(record.name)} key={record.name}>
-                {record.name}
-              </Tag>
+              {makeColoredTag(record.key)}
+              {makeColoredTag(record.name)}
             </Button>
             <p>
               学分: {record.gradePoint} 可选: {record.slots}
@@ -172,15 +172,9 @@ const Main: React.FC = () => {
             <Tag color={getColor(record.courseType)} key={record.courseType}>
               {courseType}
             </Tag>
-            <Tag color={getColor(record.campus)} key={record.campus}>
-              {record.campus}
-            </Tag>
+            {makeColoredTag(record.campus)}
             {record.teacherNames.map((teacherName: string) => {
-              return (
-                <Tag color={getColor(teacherName)} key={teacherName}>
-                  {teacherName}
-                </Tag>
-              )
+              return makeColoredTag(teacherName)
             })}
             <div
               style={{
@@ -271,11 +265,7 @@ const Main: React.FC = () => {
       filteredValue: filteredInfo.name || null,
       onFilter: (value, record) => record.name === value,
       render: (_, { name }) => {
-        return (
-          <Tag color={getColor(name)} key={name}>
-            {name}
-          </Tag>
-        )
+        return makeColoredTag(name)
       },
     },
     {
@@ -414,7 +404,7 @@ const Main: React.FC = () => {
       ),
     },
     {
-      title: '上课时间',
+      title: '上课教室',
       dataIndex: 'classrooms',
       key: 'classrooms',
       align: 'center',
@@ -423,11 +413,7 @@ const Main: React.FC = () => {
       render: (classrooms) => (
         <span>
           {classrooms.map((classroom: string, index: number) => {
-            return (
-              <Tag color={getColor(classroom)} key={classroom + index}>
-                {classroom}
-              </Tag>
-            )
+            return makeColoredTag(classroom)
           })}
         </span>
       ),
@@ -442,11 +428,7 @@ const Main: React.FC = () => {
       render: (courseTimes) => (
         <span>
           {courseTimes.map((courseTime: string) => {
-            return (
-              <Tag color={getColor(courseTime)} key={courseTime}>
-                {courseTime}
-              </Tag>
-            )
+            return makeColoredTag(courseTime)
           })}
         </span>
       ),
